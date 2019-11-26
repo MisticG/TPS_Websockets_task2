@@ -30,6 +30,7 @@ export default class App extends Component<Props, State> {
     return (
       <div>
         <header>
+          <h1>Hey this is test</h1>
           {this.state.hello}
           What are you doing?
         </header>
