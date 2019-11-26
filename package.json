@@ -1,0 +1,28 @@
+{
+  "name": "tps_websockets_task2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "backend": "cd backend && nodemon index.js",
+    "frontend": "cd frontend &&  npm start",
+    "dev": "concurrently --kill-others-on-fail \"npm run backend\" \"npm run frontend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MisticG/TPS_Websockets_task2.git"
+  },
+  "author": "Tuivi and Sakine",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MisticG/TPS_Websockets_task2/issues"
+  },
+  "homepage": "https://github.com/MisticG/TPS_Websockets_task2#readme",
+  "dependencies": {
+    "concurrently": "^5.0.0",
+    "express": "^4.17.1",
+    "http": "0.0.0",
+    "nodemon": "^2.0.1",
+    "socket.io": "^2.3.0"
+  }
+}
