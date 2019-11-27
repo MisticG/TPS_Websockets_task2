@@ -24,27 +24,7 @@ export default class ChatBox extends React.Component<Props, State> {
     };  
 
     this.sendMessage = this.sendMessage.bind(this);
-    
-        var socket = io('localhost:5000');
-        socket.on('RECEIVE_MESSAGE',(data: any)=>{
-            this.addMessage(data)
-            //this.setState({messages: data})
-            console.log(this.state.messages)
-            
-            //this.setState({messages: data});
-        /*socket.on('RECEIVE_MESSAGE', function(data: any) {
-            return(
-                <div>
-                    <h1>{data}</h1>
-                </div>
-            )*/
-        })
 
-};
-addMessage(data:any) {
-    console.log(data, 'im alive');
-    this.setState({messages: data});
-    console.log(this.state.messages);
 };
 
 sendMessage (event: React.FormEvent) {
@@ -56,9 +36,10 @@ sendMessage (event: React.FormEvent) {
     this.setState({message: ''});
 }
 
+socket: any = io('localhost:5000');
+
 showMessage = () => {
-    var socket = io('localhost:5000');
-    socket.on('RECEIVE_MESSAGE', (data: any)=>{
+    this.socket.on('RECEIVE_MESSAGE', (data: any)=>{
         this.setState({returnMessages: data})
     })
 
@@ -68,19 +49,6 @@ showMessage = () => {
         })
     }
 }
-
-/*addMessage() {
-    var socket = io('localhost:5000');
-    socket.on('RECEIVE_MESSAGE',(data:[])=>{
-        this.setState({messages: data});
-    socket.on('RECEIVE_MESSAGE', function(data: any) {
-        return(
-            <div>
-                <h1>{data}</h1>
-            </div>
-        )
-    })
-}*/
 
 render() {
     return (
@@ -93,7 +61,7 @@ render() {
                             <hr/>
                             <div className="messages">
                                 <ul>
-                                    {this.showMessage()}
+                                   {this.showMessage()}
                                 </ul>
                             </div>
                         </div>

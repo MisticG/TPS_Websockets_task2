@@ -15,7 +15,6 @@ export default class App extends Component<Props, State> {
       hello:''
     }
   }
-
   componentDidMount(){
     this.test()
   }

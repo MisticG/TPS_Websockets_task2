@@ -19,9 +19,9 @@ io.on('connection', function (socket) {
 
     console.log(socket.id);
     socket.on('SEND_MESSAGE', function(data) {
+        io.emit('RECEIVE_MESSAGE', data);
         //gör en forloop. kolla om det finns en slash. Om det finns så skicka det i en request. Substring = 6
         //gör en fil för anrop och en fil för keys. Använd express.
-        io.emit('RECEIVE_MESSAGE', data);
     })
 })
 
