@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import io from 'socket.io-client';
+//import io from 'socket.io-client';
+import ChatBox from './chatBox';
 interface State{
   hello:String
 }
@@ -8,7 +9,7 @@ interface Props{
 
 }
 export default class App extends Component<Props, State> {
-  constructor(props:Props){
+  /*constructor(props:Props){
     super(props);
     this.state={
       hello:''
@@ -25,17 +26,13 @@ export default class App extends Component<Props, State> {
     })
     
    
-  };
+  };*/
   render(){
     return (
       <div>
-        <header>
-          {this.state.hello}
-          What are you doing?
-        </header>
+        <ChatBox/>
       </div>
+      
     );
   }
-}
-
-;
+};
