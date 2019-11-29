@@ -5,8 +5,10 @@ import ChatBox from './chatBox';
 interface State{
   hello:String
 }
+import React, { Component } from 'react';
+import Form from './Form'
 
-interface Props{
+export default class App extends Component {
 
 }
 export default class App extends Component<Props, State> {
@@ -34,8 +36,14 @@ export default class App extends Component<Props, State> {
       <div>
         {this.state.hello}
         <ChatBox/>
+
+  render() {
+    return (
+      <div>
+        <Form />
       </div>
       
     );
   }
+};
 };

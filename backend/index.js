@@ -8,6 +8,7 @@ app.use(bodyParser.urlencoded({extended:true}))
 // Create server and supply a function handler (app)
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
+ 
 
 // route handler
 app.get('/api', (req, res) => {
@@ -61,10 +62,19 @@ const io = require('socket.io')(http);
 
 app.get('/',(req,res)=>{
     res.send('Hejjj')
-})
+})  
 
+let messages = []  
+//io is the connections objet to all clientsand socket is one single connection  
 io.on('connection',(socket)=>{
-    socket.emit('hello','World')
+
+    io.emit('message-history',messages)
+    
+    socket.on('single-message',(msg)=>{
+        messages.push(msg)
+        io.emit('single-message',msg)
+    })
+    
 })
 
 const server = http.listen(5000, ()=>{
