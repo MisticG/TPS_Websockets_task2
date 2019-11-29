@@ -1,11 +1,14 @@
 import React from 'react';
 import io from 'socket.io-client';
+import handleSlashCommand from './handleSlashCommand';
 
 interface State {
   username: string;
   message: string;
   messages: any;
-  returnMessages:any
+  returnMessages: any;
+  this: String;
+  existGiphy: boolean
 }
 
 interface Props {
@@ -20,7 +23,9 @@ export default class ChatBox extends React.Component<Props, State> {
         username: '',
         message: '',
         messages: [],
-        returnMessages:''
+        returnMessages:'',
+        this: '',
+        existGiphy: false
     };  
 
     this.sendMessage = this.sendMessage.bind(this);
@@ -31,21 +36,54 @@ export default class ChatBox extends React.Component<Props, State> {
 
     sendMessage (event: React.FormEvent) {
         event.preventDefault();
-        let msgs = this.state.messages;
-        msgs.push(this.state.message);
-        this.socket.emit('SEND_MESSAGE',msgs);
+        let msg = this.state.message;
+
+        if (msg.trim() === "") return;
+
+        if(msg.startsWith("/")) {
+            handleSlashCommand.call(this.state.this, msg);
+
+            this.setState(
+                {message: ""}
+            )
+            return;
+        }
+
+        this.socket.emit('SEND_MESSAGE',msg);
         this.setState({message: ''});
     }
+
+    componentDidMount() {
+        this.showGiphyImg()
+    }
+
+    showGiphyImg() {
+        this.socket.on('RECEIVE_QUERY', (imgUrl: any) => {
+            this.setState({returnMessages: imgUrl, existGiphy: true})
+            console.log(this.state.returnMessages)
+        })
+
+        
+    }
+
+    
 
     showMessage = () => {
         this.socket.on('RECEIVE_MESSAGE', (data: any)=>{
             this.setState({returnMessages: data})
         })
 
-        if (this.state.returnMessages.length > 0) {
-            return this.state.returnMessages.map((msg: String)=>{
-                return <li>{msg}</li>
-            })
+        if (this.state.existGiphy === false) {
+            return (
+                <li>{this.state.returnMessages}</li>
+            )
+        }else {
+            return (
+                <li>
+                    <h1>hey</h1>
+                    <img src={this.state.returnMessages} alt="chosen giphy gif"/>
+                </li>
+            )
         }
     }
 
@@ -58,9 +96,12 @@ export default class ChatBox extends React.Component<Props, State> {
                             <div className="card-body">
                                 <div className="card-title">Global Chat</div>
                                 <hr/>
-                                <div className="messages">
-                                    <ul>
+                                <div>
+                                    
                                     {this.showMessage()}
+                                </div>
+                                <div>
+                                    <ul>
                                     </ul>
                                 </div>
                             </div>
