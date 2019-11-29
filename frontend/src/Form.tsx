@@ -1,10 +1,14 @@
 import React, { Component, CSSProperties } from 'react';
 import io from 'socket.io-client';
+import handleSlashCommand from './handleSlashCommand';
 
 interface State {
   username: String,
   message: String,
   messages: any
+  thisMsg: String
+  existGiphy: boolean,
+  imgUrl: any
 }
 interface Props {
 
@@ -17,8 +21,10 @@ export default class Form extends Component<Props, State>{
     this.state = {
       message: '',
       username: '',
-      messages: []
-
+      messages: [],
+      thisMsg: '',
+      existGiphy: false,
+      imgUrl: ''
     }
 
     this.socket = io('http://localhost:5000');
@@ -27,21 +33,32 @@ export default class Form extends Component<Props, State>{
 
   handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    this.socket.emit('single-message', this.state.message);
+    let msg = this.state.message;
+      if (msg.trim() === "") return;
+
+      if(msg.startsWith("/")) {
+          handleSlashCommand.call(this.state.thisMsg, msg);
+
+          this.setState(
+            {message: ""}
+          )
+          return;
+      }
+
+    this.socket.emit('single-message', msg);
+    this.setState({message: ''});
   }
 
   handOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-
     this.setState({ [event.target.name]: event.target.value } as Pick<State, any>)
-
   }
 
   componentDidMount() {
     this.setupSocketEventListeners()
   }
-  
+
   componentWillUnmount() {
-     this.socket.close()
+    this.socket.close()
   }
 
   setupSocketEventListeners = () => {
@@ -50,28 +67,52 @@ export default class Form extends Component<Props, State>{
       this.setState({ messages: dat }, () => { console.log(this.state.messages, 'here is state') })
     })
 
-    this.socket.on('single-message', (message: any) => {
-      console.log('new message received: ', message)
-      this.state.messages.push(message)
-      this.setState({ messages: this.state.messages})
-     // this.state.messages.push(message)
+    this.socket.on('single-message', (messages: any) => {
+      console.log('new message received: ', messages)
+      //this.state.messages.push(message)
+      this.setState({ messages: messages })
+      // this.state.messages.push(message)
     })
+    this.socket.on('RECEIVE_QUERY', (imgUrl: any) => {
+      this.state.messages.push(imgUrl)
+      this.setState({messages: this.state.messages, existGiphy: true, imgUrl: imgUrl})
+      console.log(this.state.messages)
+  })
 
+    //showgiphy kod, ej funktion
   }
 
-  displayMessageHistory(){
-    if(this.state.messages.length > 0){
-      return this.state.messages.map((message:string)=>{
-      return <li>{message}</li>
+  displayMessageHistory() {
+
+    if (this.state.messages.length > 0)  {
+      return this.state.messages.map((message: string) => {
+        let msg = message.substring(0, 4)
+        console.log(msg)
+        if (msg === 'http') {
+          return <img src={message} alt="chosen giphy gif"/>
+        } 
+          return <li>{message}</li>
       })
+    } if (this.state.existGiphy === true) {
+      return (
+        <li>
+            <h1>hey</h1>
+            <img src={this.state.imgUrl} alt="chosen giphy gif"/>
+        </li>
+    )
     }
+    /*if (this.state.messages.length > 0) {
+      return this.state.messages.map((message: string) => {
+        return <li>{message}</li>
+      })
+    }*/
   }
 
   render() {
     return (
       <div>
         <ul>
-            {this.displayMessageHistory()}
+          {this.displayMessageHistory()}
         </ul>
 
 
