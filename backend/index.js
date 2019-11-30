@@ -22,52 +22,17 @@ io.on('connection',(socket)=>{
 
     socket.on('SEND_QUERY', function(query) {
         console.log(query, 'query in socket')
-        var request = require('./requestHandler')( query);
+        var request = require('./requestHandler')(query);
         request.then((imgs)=>{
             let imgUrl = imgs.downsized_medium.url
             messages.push(imgUrl)
             io.emit('RECEIVE_QUERY', imgUrl)
-            //console.log(imgs)
         }).catch((error)=>{
             io.emit('RECEIVE_QUERY','Det gick inte att hämta!')
         })
     })
-    
 })
 
 const server = http.listen(5000, ()=>{
     console.log('server listen at port',server.address().port)
 })
- 
-
-// route handler
-/*io.on('connection', function (socket) {
-    socket.on('SEND_QUERY', function(query) {
-        console.log(query, 'query in socket')
-        var request = require('./requestHandler')( query);
-        request.then((imgs)=>{
-            let imgUrl = imgs.downsized_medium.url
-            io.emit('RECEIVE_QUERY', imgUrl)
-            //console.log(imgs)
-        }).catch((error)=>{
-            io.emit('RECEIVE_QUERY','Det gick inte att hämta!')
-        })
-    })*/
-
-    //console.log(socket.id);
-    //socket.on('SEND_MESSAGE', function(data) {
-        //console.log(data)
-        /*let test = data.substring(0,1);
-        if(test === "/") {
-            console.log(test)
-            let tr =  require('./requestHandler')(app, data);
-        } else {
-
-            
-        }*/
-        //io.emit('RECEIVE_MESSAGE', data);
-    
-        //gör en forloop. kolla om det finns en slash. Om det finns så skicka det i en request. Substring = 6
-        //gör en fil för anrop och en fil för keys. Använd express.
-    //})
-//})

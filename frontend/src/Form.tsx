@@ -114,12 +114,9 @@ export default class Form extends Component<Props, State>{
         <ul>
           {this.displayMessageHistory()}
         </ul>
-
-
         <form onSubmit={this.handleSubmit} style={formStyle}>
           <label htmlFor="text" style={labelStyle}> Username:
-                <input style={inputStyle} type="text" name="username" onChange={this.handOnChange} />
-
+            <input style={inputStyle} type="text" name="username" onChange={this.handOnChange} />
           </label>
           <label htmlFor="text" style={labelStyle}>
             Message:

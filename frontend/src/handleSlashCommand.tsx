@@ -4,23 +4,33 @@ const socket: any = io('http://localhost:5000')
 export default function handleSlashCommand(this: String, message: String) {
     console.log(message)
     const cmd = message.split(" ")[0]
-    const query = message.slice(cmd.length)
-    console.log(cmd, 'this is a cmd')
-    console.log(query, 'this is a query')
+    let query = message.slice(cmd.length)
 
-    if(cmd !== "/giphy") {
+    if(cmd === "/giphy") {
+        query = 'giphy' + query
+        socket.emit('SEND_QUERY', query)
+    } else if(cmd === "/bored") {
+        query = 'bored' + query
+        socket.emit('SEND_QUERY', query)
+    } else {
+        alert(`${cmd} is not a valid command`)
+        return;
+    }
+
+    /*if(cmd !== "/giphy") {
         console.log(cmd, 'this is a cmd')
         console.log(query, 'this is a query')
         alert(`${cmd} is not a valid command`)
         return;
     } else {
     sendQuery();
-    }
+    }*/
     
-    function sendQuery() {
+    /*function sendQuery() {
+        query = 'giphy' + query
         console.log(query)
         socket.emit('SEND_QUERY', query);
-    }
+    }*/
 
     /*ReceiveQuery();
     function ReceiveQuery() {

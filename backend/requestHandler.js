@@ -3,7 +3,6 @@ const axios = require('axios').default;
 module.exports = function(query) {
 const keys = require('./keys');
 
-
     //let finald
     /*fetch (keys.url + query.query + keys.key+ '&limit=1')
     .then(res => res.json())
@@ -20,15 +19,29 @@ const keys = require('./keys');
     }*/
 
 async function sendData() {
-  
+    const api = query.split(" ")[0]
+    //const q = query.split(" ")[1]
+    console.log(api, 'api')
+
+    //console.log(q, 'query')
+    let response;
     try{
-        
-        let response = axios(keys.url + query+ keys.key+ '&limit=1');
+        if(api === 'giphy') {
+        //console.log(query, 'requesthandler')
+            response = axios(keys.giphyUrl + q + keys.giphyKey+ '&limit=1');
+        } else if (api === 'bored') {
+            response = axios(keys.boredUrl);
+        }
         let finalResponse = await response;
 
         if(finalResponse.status === 200) {
+            if(api === 'giphy') {
            // console.log(finalResponse.data.data[0])
             return finalResponse.data.data[0].images;
+            } else if(api === 'bored') {
+                console.log(finalResponse.data.activity)
+                return finalResponse.data.activity;
+            }
         } else {
             return finalResponse.status + 'Error: '+ finalResponse.statusText
         }
