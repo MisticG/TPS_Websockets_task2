@@ -22,11 +22,12 @@ io.on('connection',(socket)=>{
 
     socket.on('SEND_QUERY', function(query) {
         console.log(query, 'query in socket')
-        var request = require('./requestHandler')(query);
-        request.then((imgs)=>{
-            let imgUrl = imgs.downsized_medium.url
-            messages.push(imgUrl)
-            io.emit('RECEIVE_QUERY', imgUrl)
+        var response = require('./requestHandler')(query);
+
+        //svar från requestHandler
+        response.then((data)=>{
+            messages.push(data)
+            io.emit('RECEIVE_QUERY', data)
         }).catch((error)=>{
             io.emit('RECEIVE_QUERY','Det gick inte att hämta!')
         })

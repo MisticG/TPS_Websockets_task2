@@ -20,7 +20,7 @@ const keys = require('./keys');
 
 async function sendData() {
     const api = query.split(" ")[0]
-    //const q = query.split(" ")[1]
+    const q = query.split(" ")[1]
     console.log(api, 'api')
 
     //console.log(q, 'query')
@@ -37,7 +37,7 @@ async function sendData() {
         if(finalResponse.status === 200) {
             if(api === 'giphy') {
            // console.log(finalResponse.data.data[0])
-            return finalResponse.data.data[0].images;
+            return finalResponse.data.data[0].images.downsized_medium.url;
             } else if(api === 'bored') {
                 console.log(finalResponse.data.activity)
                 return finalResponse.data.activity;

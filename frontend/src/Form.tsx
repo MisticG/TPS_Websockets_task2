@@ -78,34 +78,21 @@ export default class Form extends Component<Props, State>{
       this.setState({messages: this.state.messages, existGiphy: true, imgUrl: imgUrl})
       console.log(this.state.messages)
   })
-
-    //showgiphy kod, ej funktion
   }
 
   displayMessageHistory() {
-
+    //if there are any messages
     if (this.state.messages.length > 0)  {
       return this.state.messages.map((message: string) => {
+
+        //if the string contains http aka image from giphy
         let msg = message.substring(0, 4)
-        console.log(msg)
         if (msg === 'http') {
           return <img src={message} alt="chosen giphy gif"/>
         } 
           return <li>{message}</li>
       })
-    } if (this.state.existGiphy === true) {
-      return (
-        <li>
-            <h1>hey</h1>
-            <img src={this.state.imgUrl} alt="chosen giphy gif"/>
-        </li>
-    )
-    }
-    /*if (this.state.messages.length > 0) {
-      return this.state.messages.map((message: string) => {
-        return <li>{message}</li>
-      })
-    }*/
+    } 
   }
 
   render() {
