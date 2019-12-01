@@ -1,13 +1,25 @@
 import React, { Component } from 'react';
-import Form from './Form'
+import Form from './Form';
+import Login from './Login';
+interface Props {
 
-export default class App extends Component {
+}
+interface State {
 
+}
+export default class App extends Component<Props, State> {
+
+
+
+  setCurrentUser =(currentUser:{username:String, login:Boolean})=>{
+    console.log(currentUser)
+  }
 
   render() {
     return (
       <div>
-        <Form />
+        <Login  setCurrentUser={this.setCurrentUser}/>
+
       </div>
     );
   }

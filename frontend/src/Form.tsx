@@ -1,23 +1,28 @@
 import React, { Component, CSSProperties } from 'react';
 import io from 'socket.io-client';
 
-interface State {
-  username: String,
-  message: String,
-  messages: any
-}
-interface Props {
+interface currentUser {
 
 }
-export default class Form extends Component<Props, State>{
+interface State {
+
+  message: String,
+  messages: any,
+  currentUser:String,
+}
+interface Props {
+  username:String
+ 
+}
+export default class Form extends Component<Props, State> {
   private socket: SocketIOClient.Socket
 
   constructor(props: Props) {
     super(props);
     this.state = {
       message: '',
-      username: '',
-      messages: []
+      messages: [],
+      currentUser:''
 
     }
 
@@ -27,14 +32,16 @@ export default class Form extends Component<Props, State>{
 
   handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    this.socket.emit('single-message', this.state.message);
+    
+    this.socket.emit('single-message', {username:this.props.username, message:this.state.message});
+    this.setState({currentUser:''})
   }
 
   handOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
     this.setState({ [event.target.name]: event.target.value } as Pick<State, any>)
 
-  }
+  } 
 
   componentDidMount() {
     this.setupSocketEventListeners()
@@ -47,44 +54,63 @@ export default class Form extends Component<Props, State>{
   setupSocketEventListeners = () => {
 
     this.socket.on('message-history', (dat: string) => {
+   
       this.setState({ messages: dat }, () => { console.log(this.state.messages, 'here is state') })
     })
-
-    this.socket.on('single-message', (message: any) => {
-      console.log('new message received: ', message)
-      this.state.messages.push(message)
-      this.setState({ messages: this.state.messages})
-     // this.state.messages.push(message)
+    
+    this.socket.on('single-message', (users: any) => {
+    
+      this.setState({ messages: users})
+   
     })
+    this.socket.on('user',((username:string)=>{
+      this.setState({currentUser:username})
+    }))
 
   }
 
-  displayMessageHistory(){
-    if(this.state.messages.length > 0){
-      return this.state.messages.map((message:string)=>{
-      return <li>{message}</li>
+  displayMessageHistory() {
+    if(this.state.messages.length > 0 ) {
+      return this.state.messages.map((message:{username:string, id:number, messages:any[]})=>{
+      
+        if(message.messages.length > 0){
+          
+          return message.messages.map((msg:string)=> {
+          return <li>{msg}</li>
+          })
+        }
       })
     }
   }
+
+  displayCurrentSender (){
+    if( this.state.currentUser !=='' ) {
+    
+    return <span>{this.state.currentUser+ ' is typing.... '}</span>
+    }
+  }
+ 
+  
+
+
 
   render() {
     return (
       <div>
         <ul>
-            {this.displayMessageHistory()}
+            {this.displayMessageHistory()
+            }
+
         </ul>
+        {this.displayCurrentSender()}
 
 
         <form onSubmit={this.handleSubmit} style={formStyle}>
-          <label htmlFor="text" style={labelStyle}> Username:
-                <input style={inputStyle} type="text" name="username" onChange={this.handOnChange} />
-
-          </label>
-          <label htmlFor="text" style={labelStyle}>
-            Message:
-                <input style={inputStyle} type="text" name="message" onChange={this.handOnChange} />
-          </label>
-          <input style={buttonStyle} type="submit" value="Skicka" />
+        <label htmlFor="text" style={labelStyle}>
+          Message:
+              <input style={inputStyle} type="text" name="message" onChange={this.handOnChange} />
+        </label>
+          <input type="submit" value="Send"/>
         </form>
       </div>
 
