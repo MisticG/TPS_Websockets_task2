@@ -1,14 +1,18 @@
 import React, { Component, CSSProperties } from 'react';
 import io from 'socket.io-client';
 import Form from './Form';
+import Room from './Room';
+
 interface State {
   username: String,
+  room:String,
   login:Boolean,
 
 
 }
 interface Props {
-  setCurrentUser:(data:State)=>void
+  getCurrentUser:(data:State)=>void,
+  rooms:string[]
 }
 export default class Login extends Component<Props, State>{
   private socket:SocketIOClient.Socket
@@ -16,8 +20,9 @@ export default class Login extends Component<Props, State>{
     super(props);
     this.state = {
       username: '',
+      room:'Room 1',
       login:false,
-
+  
      
 
     }
@@ -28,9 +33,9 @@ export default class Login extends Component<Props, State>{
 
   handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    let senderInfo ={username:this.state.username,message:'', messages:[]}
+    let senderInfo ={username:this.state.username,message:'', messages:[], room:this.state.room}
     this.socket.emit('single-message', senderInfo);
-    this.setState({login:true},()=>this.props.setCurrentUser(this.state))
+    this.setState({login:true},()=>this.props.getCurrentUser(this.state))
   }
 
   handOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,14 +44,18 @@ export default class Login extends Component<Props, State>{
 
   }
 
-
+  getChoosenRoom = (room:String)=>{
+    this.setState({room:room},()=>{ console.log(this.state.room)})
+ 
+  }
 
   renderUser =()=>{
     if(this.state.login === true && this.state.username !== '') {
-      return <Form username={this.state.username}/>
+      return <Form username={this.state.username} room={this.state.room}/>
     } else  {
       return  (
         <div style={formContainer}>
+        <Room rooms={this.props.rooms} getChoosenRoom={this.getChoosenRoom}/>
        
           <form  style={loginForm}onSubmit={this.handleSubmit} >
             <label htmlFor="text" > Get a nickname:

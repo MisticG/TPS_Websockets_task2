@@ -11,7 +11,8 @@ interface State {
   currentUser:String,
 }
 interface Props {
-  username:String
+  username:String,
+  room:String
  
 }
 export default class Form extends Component<Props, State> {
@@ -33,7 +34,7 @@ export default class Form extends Component<Props, State> {
   handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
-    this.socket.emit('single-message', {username:this.props.username, message:this.state.message});
+    this.socket.emit('single-message', {username:this.props.username, message:this.state.message, room:this.props.room});
     this.setState({currentUser:''})
   }
 
@@ -59,7 +60,7 @@ export default class Form extends Component<Props, State> {
     })
     
     this.socket.on('single-message', (users: any) => {
-    
+      console.log(users);
       this.setState({ messages: users})
    
     })
@@ -67,16 +68,21 @@ export default class Form extends Component<Props, State> {
       this.setState({currentUser:username})
     }))
 
+    this.socket.on('nice game',(msg:string)=>{
+      console.log(msg)
+      this.setState({message:msg},()=>{console.log(this.state.message)})
+    })
+
   }
 
   displayMessageHistory() {
     if(this.state.messages.length > 0 ) {
-      return this.state.messages.map((message:{username:string, id:number, messages:any[]})=>{
+      return this.state.messages.map((message:{username:string, id:number,roo:string, messages:string[]})=>{
       
         if(message.messages.length > 0){
           
           return message.messages.map((msg:string)=> {
-          return <li>{msg}</li>
+          return <li>{msg} from {message.username}</li>
           })
         }
       })
@@ -103,6 +109,8 @@ export default class Form extends Component<Props, State> {
 
         </ul>
         {this.displayCurrentSender()}
+          <h1>{'user: '+ this.props.username}</h1>
+          <h1>{'Room: '+ this.props.room}</h1>
 
 
         <form onSubmit={this.handleSubmit} style={formStyle}>

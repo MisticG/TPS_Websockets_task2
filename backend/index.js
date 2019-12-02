@@ -3,18 +3,18 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
  
 
-app.get('/',(req,res)=>{
-    res.send('Hejjj')
-})  
 
+let rooms = ['Room 1', 'Room 2', 'Room 3']
 let usersWithmessages = []  
+
 //io is the connections objet to all clientsand socket is one single connection  
 io.on('connection',(socket)=> {
-
-    io.emit('message-history',usersWithmessages)
-
+    //io.sockets.in(userInfo.room)
+    io.emit('message-history',usersWithmessages);
+    io.emit('rooms', rooms)
+ 
     socket.on('single-message',(userInfo) => {
-    
+
         let existUser = false;
         let isUser = checkUser(userInfo, existUser);
     
@@ -30,11 +30,13 @@ io.on('connection',(socket)=> {
                     }
                 }
             
-           
+                
         } 
-        console.log(userInfo)
-        socket.broadcast.emit('user', userInfo.username)
-        io.emit('single-message',usersWithmessages)
+        socket.join(userInfo.room)
+   
+        socket.broadcast.to(userInfo.room).emit('user', userInfo.username);
+
+        io.sockets.in(userInfo.room).emit('single-message', usersWithmessages);
     })
     
 })
