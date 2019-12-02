@@ -2,7 +2,6 @@ import io from 'socket.io-client';
 const socket: any = io('http://localhost:5000')
 
 export default function handleSlashCommand(this: String, message: String) {
-    console.log(message)
     const cmd = message.split(" ")[0]
     let query = message.slice(cmd.length)
 

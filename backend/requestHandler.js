@@ -5,12 +5,12 @@ module.exports = function(query) {
 
     async function sendData() {
         const api = query.split(" ")[0]
-        const q = query.split(" ")[1]
+        const req = query.split(" ")[1]
 
         let response;
         try{
             if(api === 'giphy') {
-                response = axios(keys.giphyUrl + q + keys.giphyKey+ '&limit=1');
+                response = axios(keys.giphyUrl + req + keys.giphyKey+ '&limit=1');
             } else if (api === 'bored') {
                 response = axios(keys.boredUrl);
             } else if (api === 'cat') {

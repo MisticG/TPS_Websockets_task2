@@ -10,9 +10,11 @@ interface State {
   existGiphy: boolean,
   imgUrl: any
 }
+
 interface Props {
 
 }
+
 export default class Form extends Component<Props, State>{
   private socket: SocketIOClient.Socket
 
@@ -69,9 +71,7 @@ export default class Form extends Component<Props, State>{
 
     this.socket.on('single-message', (messages: any) => {
       console.log('new message received: ', messages)
-      //this.state.messages.push(message)
       this.setState({ messages: messages })
-      // this.state.messages.push(message)
     })
     this.socket.on('RECEIVE_QUERY', (imgUrl: any) => {
       this.state.messages.push(imgUrl)
@@ -88,9 +88,11 @@ export default class Form extends Component<Props, State>{
         //if the string contains 'http' aka An image
         let msg = message.substring(0, 4)
         if (msg === 'http') {
-          return <img src={message} alt="chosen or random gifs or/of cats"/>
+          return <img src={message} style={{width: "400px", height: "300px"}}alt="chosen or random gifs or/of cats"/>
+
+          //else return  an ordinary string message
         } 
-          return <li>{message}</li>
+          return <li>Bored? Do this: <b>{message}</b></li>
       })
     } 
   }
