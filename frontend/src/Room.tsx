@@ -30,6 +30,7 @@ export default class Room extends Component<Props, State> {
         this.setState({choosenRoom:event.currentTarget.innerHTML},()=>{
           
             this.props.getChoosenRoom(this.state.choosenRoom);
+            alert('you choose room: '+ this.state.choosenRoom)
         });
         
     }
@@ -46,14 +47,16 @@ export default class Room extends Component<Props, State> {
         }
     }
 
+    
   render() {
     return (
         <div style={roomContainer}>
-  <h4> your default room is {this.state.choosenRoom}!</h4>
+            <h3> your default room is {this.state.choosenRoom}!</h3>
         <ul style={roomStyle}> 
 
         {this.displayAllRooms()}
         </ul>
+        
         </div>
 
     );

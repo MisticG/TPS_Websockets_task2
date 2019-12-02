@@ -5,6 +5,7 @@ import Room from './Room';
 
 interface State {
   username: String,
+  password:string,
   room:String,
   login:Boolean,
 
@@ -22,6 +23,7 @@ export default class Login extends Component<Props, State>{
       username: '',
       room:'a',
       login:false,
+      password:''
   
      
 
@@ -33,15 +35,15 @@ export default class Login extends Component<Props, State>{
 
   handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    let senderInfo ={username:this.state.username,message:'', messages:[], room:this.state.room};
+    let senderInfo ={username:this.state.username,message:'', messages:[], room:this.state.room, password:this.state.password};
     console.log(senderInfo, 'here is sender')
     this.socket.emit('single-message', senderInfo);
     this.setState({login:true},()=>this.props.getCurrentUser(this.state))
   }
 
   handOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-
-    this.setState({username:event.target.value })
+ 
+    this.setState({[event.target.name]:event.target.value } as any)
 
   }
 
@@ -60,10 +62,14 @@ export default class Login extends Component<Props, State>{
        
           <form  style={loginForm}onSubmit={this.handleSubmit} >
             <label htmlFor="text" > Get a nickname:
-                  <input  style={inputWidth} type="text" name="username" onChange={this.handOnChange} />
+                  <input  style={inputWidth} type="text" name="username" onChange={this.handOnChange} required/>
   
             </label>
-            <input  type="submit" value="Get a nickname!" />
+            <label htmlFor="text" > Get a password:
+                  <input  style={inputWidth} type="password" name="password" onChange={this.handOnChange} required/>
+  
+            </label>
+            <input  type="submit" value="Sign in!" />
           </form>
         </div>
   
