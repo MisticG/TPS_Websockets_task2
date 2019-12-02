@@ -12,6 +12,9 @@ export default function handleSlashCommand(this: String, message: String) {
     } else if(cmd === "/bored") {
         query = 'bored' + query
         socket.emit('SEND_QUERY', query)
+    } else if (cmd === "/cat") {
+        query = 'cat' + query
+        socket.emit('SEND_QUERY', query)
     } else {
         alert(`${cmd} is not a valid command`)
         return;

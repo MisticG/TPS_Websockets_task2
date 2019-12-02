@@ -84,11 +84,11 @@ export default class Form extends Component<Props, State>{
     //if there are any messages
     if (this.state.messages.length > 0)  {
       return this.state.messages.map((message: string) => {
-
-        //if the string contains http aka image from giphy
+        
+        //if the string contains 'http' aka An image
         let msg = message.substring(0, 4)
         if (msg === 'http') {
-          return <img src={message} alt="chosen giphy gif"/>
+          return <img src={message} alt="chosen or random gifs or/of cats"/>
         } 
           return <li>{message}</li>
       })

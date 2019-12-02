@@ -21,10 +21,9 @@ io.on('connection',(socket)=>{
     })
 
     socket.on('SEND_QUERY', function(query) {
-        console.log(query, 'query in socket')
         var response = require('./requestHandler')(query);
-
-        //svar från requestHandler
+        
+        //response from requestHandler
         response.then((data)=>{
             messages.push(data)
             io.emit('RECEIVE_QUERY', data)
