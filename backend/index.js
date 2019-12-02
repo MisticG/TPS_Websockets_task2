@@ -1,6 +1,7 @@
 const app = require('express')();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
+const _ = require('underscore');
  
 
 
@@ -11,12 +12,15 @@ let usersWithmessages = []
 io.on('connection',(socket)=> {
 
     io.emit('rooms', rooms);
-    io.emit('message-history',usersWithmessages);
-  
- 
+    
+    
     socket.on('join_room',(room)=>{
-
+        
         socket.join(room);
+        let allGroups = _.groupBy(usersWithmessages, (obj)=>{return obj.room });
+        io.sockets.in(room).emit('message-history', allGroups[room]);
+     
+        
     })
     socket.on('single-message',(userInfo) => {
 
@@ -37,9 +41,9 @@ io.on('connection',(socket)=> {
             
                 
         } 
-    
+        let allGroups = _.groupBy(usersWithmessages, (obj)=>{return obj.room });
         socket.broadcast.in(userInfo.room).emit('user', userInfo.username);
-        io.sockets.in(userInfo.room).emit('single-message', usersWithmessages);
+        io.sockets.in(userInfo.room).emit('single-message', allGroups[userInfo.room]);
     
     })
     
