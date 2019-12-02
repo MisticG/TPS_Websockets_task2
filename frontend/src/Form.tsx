@@ -67,12 +67,9 @@ export default class Form extends Component<Props, State> {
     this.socket.on('user',((username:string)=>{
       this.setState({currentUser:username})
     }))
+    this.socket.emit('join_room', this.props.room);
 
-    this.socket.on('nice game',(msg:string)=>{
-      console.log(msg)
-      this.setState({message:msg},()=>{console.log(this.state.message)})
-    })
-
+  
   }
 
   displayMessageHistory() {

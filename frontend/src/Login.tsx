@@ -20,7 +20,7 @@ export default class Login extends Component<Props, State>{
     super(props);
     this.state = {
       username: '',
-      room:'Room 1',
+      room:'a',
       login:false,
   
      
@@ -33,7 +33,8 @@ export default class Login extends Component<Props, State>{
 
   handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    let senderInfo ={username:this.state.username,message:'', messages:[], room:this.state.room}
+    let senderInfo ={username:this.state.username,message:'', messages:[], room:this.state.room};
+    console.log(senderInfo, 'here is sender')
     this.socket.emit('single-message', senderInfo);
     this.setState({login:true},()=>this.props.getCurrentUser(this.state))
   }

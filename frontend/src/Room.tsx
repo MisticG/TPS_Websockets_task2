@@ -10,23 +10,27 @@ interface State {
 
 }
 export default class Room extends Component<Props, State> {
-   
+  
     constructor(props: Props) {
         super(props);
         this.state = {
-          choosenRoom:"Room 1",
+          choosenRoom:"a",
       
       
     
     
         }
       
+
     }
 
   
     addRoom = (event: React.MouseEvent<HTMLLIElement, MouseEvent>)=>{
         
-        this.setState({choosenRoom:event.currentTarget.innerHTML},()=>{this.props.getChoosenRoom(this.state.choosenRoom)});
+        this.setState({choosenRoom:event.currentTarget.innerHTML},()=>{
+          
+            this.props.getChoosenRoom(this.state.choosenRoom);
+        });
         
     }
   

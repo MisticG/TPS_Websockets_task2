@@ -4,20 +4,25 @@ const io = require('socket.io')(http);
  
 
 
-let rooms = ['Room 1', 'Room 2', 'Room 3']
+let rooms = ['a', 'b', 'c']
 let usersWithmessages = []  
 
 //io is the connections objet to all clientsand socket is one single connection  
 io.on('connection',(socket)=> {
-    //io.sockets.in(userInfo.room)
+
+    io.emit('rooms', rooms);
     io.emit('message-history',usersWithmessages);
-    io.emit('rooms', rooms)
+  
  
+    socket.on('join_room',(room)=>{
+
+        socket.join(room);
+    })
     socket.on('single-message',(userInfo) => {
 
         let existUser = false;
         let isUser = checkUser(userInfo, existUser);
-    
+     
         if(!isUser) {
             usersWithmessages.push(userInfo);
             
@@ -32,11 +37,10 @@ io.on('connection',(socket)=> {
             
                 
         } 
-        socket.join(userInfo.room)
-   
-        socket.broadcast.to(userInfo.room).emit('user', userInfo.username);
-
+    
+        socket.broadcast.in(userInfo.room).emit('user', userInfo.username);
         io.sockets.in(userInfo.room).emit('single-message', usersWithmessages);
+    
     })
     
 })
