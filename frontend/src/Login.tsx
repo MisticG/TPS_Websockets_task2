@@ -29,7 +29,6 @@ export default class Login extends Component<Props, State>{
     this.socket = io('http://localhost:5000');
   }
 
-
   handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     let senderInfo ={username:this.state.username,message:'', messages:[], room:this.state.room, password:this.state.password};
