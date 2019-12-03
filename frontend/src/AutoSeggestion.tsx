@@ -8,8 +8,9 @@ const options = [
 ];
 
 interface Props{
-    getvalue:(data:{value:string, label:string})=>void
+  getvalue: (data:{value:string, label:string}) => void
 }
+
 interface State{
     selectedOption:any
 }
@@ -21,6 +22,7 @@ export default class AutoSeggestion extends React.Component<Props, State> {
   handleChange = ((selected:any)=>{
     this.props.getvalue(selected)
   });
+
   render() {
     const { selectedOption } = this.state;
  

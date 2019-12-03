@@ -59,10 +59,8 @@ export default class Form extends Component<Props, State> {
         this.setState({
           currentUserIsTyping:'',
           message:''
-      },()=>this.socket.emit('typing', {username:'', room:this.props.room}))
-
-
-    
+      },()=>this.socket.emit('typing', {username:'', room:this.props.room})
+    )    
   }
 
   handOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +81,6 @@ export default class Form extends Component<Props, State> {
       return <AutoSeggestion getvalue= {this.getValueFromAutoSuggestion}/>
     }
   }
-   
 
   componentDidMount() {
     this.setupSocketEventListeners();
@@ -123,8 +120,8 @@ export default class Form extends Component<Props, State> {
   }
   displayMessageHistory() {
     if(this.state.messages.length > 0 ) {
-      return this.state.messages.map((message:{username:string, id:number,room:string, messages:string[]})=>{
-      
+      return this.state.messages.map((message: {username: string, id: number, room: string, messages: string[]}) => {
+
         if(message.messages.length > 0){
           
           return message.messages.map((msg:string)=> {
@@ -147,18 +144,12 @@ export default class Form extends Component<Props, State> {
       return <span>{this.state.currentUserIsTyping+ ' is typing.... '}</span>
     }
   }
- 
-  
-
-
 
   render() {
     return (
       <div>
         <ul>
-            {this.displayMessageHistory()
-            }
-
+            {this.displayMessageHistory()}
         </ul>
           {this.displayCurrentSender()}
           <h1>{'user: '+ this.props.username}</h1>
@@ -179,9 +170,8 @@ export default class Form extends Component<Props, State> {
 
     );
   }
-
-
 }
+
 const formStyle: CSSProperties = {
   position: "fixed",
   width: "100%",
@@ -191,21 +181,22 @@ const formStyle: CSSProperties = {
   backgroundColor: "#9e9e4e",
   padding: "2em",
   alignItems: "center"
-
 }
-const labelStyle: CSSProperties = {
 
+const labelStyle: CSSProperties = {
   width: "70%"
 }
+
 const inputStyle: CSSProperties = {
   width: "100%",
   padding: "0.5em"
 }
-const buttonStyle: CSSProperties = {
+
+/*const buttonStyle: CSSProperties = {
   width: "30%",
   padding: "1em",
   marginTop: "0.5em"
-}
+}*/
 
 const autoSuggestion ={
   width:"70%"

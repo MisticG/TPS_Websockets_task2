@@ -9,8 +9,6 @@ app.use(bodyParser.urlencoded({extended:true}))
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const _ = require('underscore');
- 
-
 
 let rooms = ['a', 'b', 'c']
 let usersWithmessages = []  
@@ -24,7 +22,7 @@ io.on('connection',(socket)=> {
     socket.on('join_room',(room)=>{
         
         socket.join(room);
-        let allGroups = _.groupBy(usersWithmessages, (obj)=>{return obj.room });
+        let allGroups = _.groupBy(usersWithmessages, (obj) => {return obj.room });
         io.sockets.in(room).emit('message-history', allGroups[room]);
      
         
@@ -40,23 +38,22 @@ io.on('connection',(socket)=> {
             
         }
         if(isUser){
-                for(let user of usersWithmessages){
-                   
-                    if(user.username === userInfo.username && userInfo.message !== ''){
-                        user.messages.push(userInfo.message)
-                    }
-                }
-            
+            for(let user of usersWithmessages){
                 
+                if(user.username === userInfo.username && userInfo.message !== ''){
+                    user.messages.push(userInfo.message)
+                }
+            }
         } 
         let allGroups = _.groupBy(usersWithmessages, (obj)=>{return obj.room });
         io.sockets.in(userInfo.room).emit('single-message', allGroups[userInfo.room]);
     });
-    //Handle when someone is typing
-    socket.on('typing',(usermsg)=>{
-        socket.broadcast.in(usermsg.room).emit('typing', usermsg.username);
 
+    //Handle when someone is typing
+    socket.on('typing',(usermsg) => {
+        socket.broadcast.in(usermsg.room).emit('typing', usermsg.username);
     })
+
     //Handle api request
     socket.on('SEND_QUERY', function(query) {
         console.log(query, 'here is query')
@@ -84,7 +81,7 @@ io.on('connection',(socket)=> {
             io.emit('RECEIVE_QUERY','Det gick inte att hämta!'+error)
         })
         
-        })
+    })
 })
 
 
@@ -94,7 +91,6 @@ function checkUser(userSend, existUser){
         for (user of usersWithmessages) {
 
             if (user.username == userSend.username) {
-
                 existUser = true
             }
         }

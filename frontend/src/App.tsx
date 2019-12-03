@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Form from './Form';
+//import Form from './Form';
 import Login from './Login';
 import io from 'socket.io-client';
 interface Props {
@@ -14,33 +14,28 @@ export default class App extends Component<Props, State> {
     super(props);
     this.state = {
       rooms:[]
-     
-
     }
-
+    
     this.socket = io('http://localhost:5000');
   }
 
 
   getCurrentUser =(currentUser:{username:String, login:Boolean})=>{
-    console.log(currentUser)
-    
+    console.log(currentUser) 
   }
 
  
-  componentDidMount(){
+  componentDidMount() {
     this.socket.on('rooms',(rooms:string[])=>{
          this.setState({rooms:rooms})
-       })
-       
-     }
+    })
+  }
   
 
   render() {
     return (
       <div>
         <Login  getCurrentUser={this.getCurrentUser} rooms={this.state.rooms}/>
-
       </div>
     );
   }

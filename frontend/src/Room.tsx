@@ -1,68 +1,55 @@
 import React, { Component, CSSProperties } from 'react';
-import io from 'socket.io-client';
 interface Props {
     rooms:string[]
     getChoosenRoom:(room:String)=>void
 }
 interface State {
     choosenRoom:String
-
-
 }
+
 export default class Room extends Component<Props, State> {
   
     constructor(props: Props) {
         super(props);
         this.state = {
           choosenRoom:"a",
-      
-      
-    
-    
         }
-      
-
     }
 
-  
-    addRoom = (event: React.MouseEvent<HTMLLIElement, MouseEvent>)=>{
+    addRoom = (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
         
-        this.setState({choosenRoom:event.currentTarget.innerHTML},()=>{
+        this.setState({choosenRoom:event.currentTarget.innerHTML},() => {
           
             this.props.getChoosenRoom(this.state.choosenRoom);
             alert('you choose room: '+ this.state.choosenRoom)
-        });
-        
+        });    
     }
-  
-  
 
     displayAllRooms = ()=> {
         let rooms = this.props.rooms;
         if(rooms.length > 0 ) {
             return rooms.map((room:string)=>{
-            return <li onClick={this.addRoom}>{room}</li>
+                return <li onClick={this.addRoom}>{room}</li>
             })
-            
         }
     }
 
     
-  render() {
-    return (
-        <div style={roomContainer}>
-            <h3> your default room is {this.state.choosenRoom}!</h3>
-        <ul style={roomStyle}> 
+    render() {
+        return (
+            <div style={roomContainer}>
+                <h3> your default room is {this.state.choosenRoom}!</h3>
+            <ul style={roomStyle}> 
 
-        {this.displayAllRooms()}
-        </ul>
-        
-        </div>
+            {this.displayAllRooms()}
+            </ul>
+            
+            </div>
 
-    );
-  }
-
+        );
+    }
 };
+
 const roomContainer:CSSProperties = {
     display:"block",
     margin:"auto",
@@ -70,6 +57,7 @@ const roomContainer:CSSProperties = {
     position:"relative",
     backgroundColor:"#b7d1d2"
 }
+
 const roomStyle:CSSProperties = {
     display:"flex",
     flexDirection:"row",
@@ -77,5 +65,4 @@ const roomStyle:CSSProperties = {
     listStyleType:"none",
     justifyContent:"space-around",
     marginBottom:"2em",
-    
 }
