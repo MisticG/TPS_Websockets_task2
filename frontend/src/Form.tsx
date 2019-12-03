@@ -51,7 +51,7 @@ export default class Form extends Component<Props, State> {
     let msg = this.state.message;
     if(msg.startsWith("/")) {
          handleSlashCommand.call(this.state.thisMsg, {username:this.props.username, room:this.props.room, msg:this.state.message});
-        return 
+    
       } else {
        
         this.socket.emit('single-message', {username:this.props.username, message:this.state.message, room:this.props.room});
@@ -134,7 +134,7 @@ export default class Form extends Component<Props, State> {
     
               //else return  an ordinary string message
             } 
-              return <li>{msg + ' is from' + message.username}</li>
+              return <li>{msg + ' is from ' + message.username}</li>
           })
         }
       })
