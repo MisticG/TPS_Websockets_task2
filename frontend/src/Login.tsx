@@ -5,15 +5,15 @@ import Room from './Room';
 
 interface State {
   username: String,
-  password:string,
-  room:String,
-  login:Boolean,
+  password: string,
+  room: String,
+  login: Boolean,
 
 
 }
 interface Props {
   getCurrentUser:(data:State)=>void,
-  rooms:string[]
+  rooms: string[]
 }
 export default class Login extends Component<Props, State>{
   private socket:SocketIOClient.Socket
@@ -21,12 +21,9 @@ export default class Login extends Component<Props, State>{
     super(props);
     this.state = {
       username: '',
-      room:'a',
+      room: 'a',
       login:false,
       password:''
-  
-     
-
     }
 
     this.socket = io('http://localhost:5000');
@@ -48,7 +45,7 @@ export default class Login extends Component<Props, State>{
   }
 
   getChoosenRoom = (room:String)=>{
-    this.setState({room:room},()=>{ console.log(this.state.room)})
+    this.setState({room: room},()=>{ console.log(this.state.room)})
  
   }
 
@@ -57,19 +54,23 @@ export default class Login extends Component<Props, State>{
       return <Form username={this.state.username} room={this.state.room}/>
     } else  {
       return  (
-        <div style={formContainer}>
+        <div style={{margin: "5em"}}>
         <Room rooms={this.props.rooms} getChoosenRoom={this.getChoosenRoom}/>
        
-          <form  style={loginForm}onSubmit={this.handleSubmit} >
-            <label htmlFor="text" > Get a nickname:
-                  <input  style={inputWidth} type="text" name="username" onChange={this.handOnChange} required/>
-  
-            </label>
-            <label htmlFor="text" > Get a password:
-                  <input  style={inputWidth} type="password" name="password" onChange={this.handOnChange} required/>
-  
-            </label>
-            <input  type="submit" value="Sign in!" />
+          <form onSubmit={this.handleSubmit} >
+            <div className="form-row">
+              <div className="form-group col-md-6">
+                <label htmlFor="inputEmail4"><b>Choose nickname:</b></label>
+                <input type="text" className="form-control" placeholder="Nickname" name="username" onChange={this.handOnChange} required/>
+              </div>
+              <div className="form-group col-md-6">
+                <label htmlFor="inputPassword4"><b>Choose password:</b></label>
+                <input type="password" className="form-control" id="inputPassword4" placeholder="Your password" name="password" onChange={this.handOnChange} required/>
+              </div>
+            </div>
+            <div style={{textAlign: "right"}}>
+              <button type="submit" className="btn btn-info">Join chat!</button>
+            </div>
           </form>
         </div>
   
@@ -80,11 +81,9 @@ export default class Login extends Component<Props, State>{
   render() {
     return(this.renderUser())
   }
-
-
 }
 
-const loginForm:CSSProperties = {
+/*const loginForm:CSSProperties = {
   position:"relative",
   marginTop:"9em",
   display:'flex',
@@ -98,4 +97,4 @@ const formContainer:CSSProperties = {
 }
 const inputWidth:CSSProperties = {
   width:"50%"
-}
+}*/

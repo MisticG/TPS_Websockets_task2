@@ -16,12 +16,12 @@ export default class Room extends Component<Props, State> {
         }
     }
 
-    addRoom = (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+    addRoom = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         
         this.setState({choosenRoom:event.currentTarget.innerHTML},() => {
           
             this.props.getChoosenRoom(this.state.choosenRoom);
-            alert('you choose room: '+ this.state.choosenRoom)
+            //alert('you choose room: '+ this.state.choosenRoom)
         });    
     }
 
@@ -29,34 +29,38 @@ export default class Room extends Component<Props, State> {
         let rooms = this.props.rooms;
         if(rooms.length > 0 ) {
             return rooms.map((room:string)=>{
-                return <li onClick={this.addRoom}>{room}</li>
+                return <div>
+                    <li style={{padding: '0 3em'}}><button className="btn btn-success btn-lg" onClick={this.addRoom}>{room.toUpperCase()} </button></li>
+                </div>
             })
         }
     }
 
-    
     render() {
         return (
-            <div style={roomContainer}>
-                <h3> your default room is {this.state.choosenRoom}!</h3>
-            <ul style={roomStyle}> 
-
-            {this.displayAllRooms()}
-            </ul>
-            
+            <div className="container" style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <h2> Welcome to our Chat App! {/*{this.state.choosenRoom}!*/}</h2>
+                <div style={{marginTop: "1em"}}>
+                    <h4>Choose room:</h4>
+                </div>
+                <div>
+                    <ul style={roomStyle}> 
+                        {this.displayAllRooms()}
+                    </ul>
+                </div>
             </div>
 
         );
     }
 };
 
-const roomContainer:CSSProperties = {
+/*const roomContainer:CSSProperties = {
     display:"block",
     margin:"auto",
     width:"50%",
     position:"relative",
     backgroundColor:"#b7d1d2"
-}
+}*/
 
 const roomStyle:CSSProperties = {
     display:"flex",
@@ -64,5 +68,5 @@ const roomStyle:CSSProperties = {
     justifyItems:"center",
     listStyleType:"none",
     justifyContent:"space-around",
-    marginBottom:"2em",
+    margin:"1em 0 2em 0",
 }

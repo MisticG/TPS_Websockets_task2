@@ -106,7 +106,7 @@ export default class Form extends Component<Props, State> {
         console.log(imgUrl, 'img url')
 
       this.setState({messages: this.state.messages, existGiphy: true, imgUrl: imgUrl})
-      console.log(this.state.messages)
+        console.log(this.state.messages)
       })
 
       this.socket.on('typing',((username:string)=>{
@@ -127,11 +127,11 @@ export default class Form extends Component<Props, State> {
           return message.messages.map((msg:string)=> {
             let tr = msg.substring(0,4)
             if (tr === 'http') {
-              return<img src={msg} alt="chosen or random gifs or/of cats" style={styleImg}/>
+              return <img src={msg} alt="chosen or random gifs or/of cats" style={styleImg}/>
     
               //else return  an ordinary string message
             } 
-              return <li>{msg + ' is from ' + message.username}</li>
+              return <li>{message.username + ':' + msg}</li>
           })
         }
       })
@@ -155,14 +155,14 @@ export default class Form extends Component<Props, State> {
           <h1>{'user: '+ this.props.username}</h1>
           <h1>{'Room: '+ this.props.room}</h1>
 
-        <form onSubmit={this.handleSubmit} style={formStyle}>
+        <form onSubmit={this.handleSubmit}>
         <div style={autoSuggestion}>
 
           {this.displayAutoSuggestion()}
         </div>
-        <label htmlFor="text" style={labelStyle}>
+        <label htmlFor="text">
           Message:
-              <input style={inputStyle} type="text" name="message"  value={this.state.message} onChange={this.handOnChange} onKeyPress={this.keyPress}/>
+              <input type="text" name="message"  value={this.state.message} onChange={this.handOnChange} onKeyPress={this.keyPress}/>
         </label>
           <input type="submit" value="Send"/>
         </form>
@@ -172,7 +172,7 @@ export default class Form extends Component<Props, State> {
   }
 }
 
-const formStyle: CSSProperties = {
+/*const formStyle: CSSProperties = {
   position: "fixed",
   width: "100%",
   bottom: 0,
@@ -190,7 +190,7 @@ const labelStyle: CSSProperties = {
 const inputStyle: CSSProperties = {
   width: "100%",
   padding: "0.5em"
-}
+}*/
 
 /*const buttonStyle: CSSProperties = {
   width: "30%",

@@ -19,14 +19,12 @@ io.on('connection',(socket)=> {
     io.emit('rooms', rooms);
     
     //Handle joing room and history for specefic group
-    socket.on('join_room',(room)=>{
-        
+    socket.on('join_room',(room)=>{    
         socket.join(room);
         let allGroups = _.groupBy(usersWithmessages, (obj) => {return obj.room });
-        io.sockets.in(room).emit('message-history', allGroups[room]);
-     
-        
+        io.sockets.in(room).emit('message-history', allGroups[room]);   
     })
+
     //Handle single message for single user with specefic group
     socket.on('single-message',(userInfo) => {
 

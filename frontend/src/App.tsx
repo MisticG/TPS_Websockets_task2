@@ -15,7 +15,7 @@ export default class App extends Component<Props, State> {
     this.state = {
       rooms:[]
     }
-    
+
     this.socket = io('http://localhost:5000');
   }
 
@@ -24,7 +24,6 @@ export default class App extends Component<Props, State> {
     console.log(currentUser) 
   }
 
- 
   componentDidMount() {
     this.socket.on('rooms',(rooms:string[])=>{
          this.setState({rooms:rooms})
@@ -34,8 +33,10 @@ export default class App extends Component<Props, State> {
 
   render() {
     return (
-      <div>
-        <Login  getCurrentUser={this.getCurrentUser} rooms={this.state.rooms}/>
+      <div className="container-fluid" style={{display: 'flex', justifyContent: "center", marginTop: "5em"}}>
+        <div className="shadow border border-light rounded">
+          <Login  getCurrentUser={this.getCurrentUser} rooms={this.state.rooms}/>
+        </div>
       </div>
     );
   }
