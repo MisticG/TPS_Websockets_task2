@@ -35,7 +35,7 @@ export default class App extends Component<Props, State> {
     return (
       <div className="container-fluid" style={{display: 'flex', justifyContent: "center", marginTop: "5em"}}>
         <div className="shadow border border-light rounded">
-          <Login  getCurrentUser={this.getCurrentUser} rooms={this.state.rooms}/>
+          <Login getCurrentUser={this.getCurrentUser} rooms={this.state.rooms}/>
         </div>
       </div>
     );

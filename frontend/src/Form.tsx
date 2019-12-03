@@ -102,7 +102,6 @@ export default class Form extends Component<Props, State> {
       this.setState({ messages: messages })
       })
       this.socket.on('RECEIVE_QUERY', (imgUrl: any) => {
-      //this.state.messages.push(imgUrl)
         console.log(imgUrl, 'img url')
 
       this.setState({messages: this.state.messages, existGiphy: true, imgUrl: imgUrl})
@@ -121,17 +120,17 @@ export default class Form extends Component<Props, State> {
   displayMessageHistory() {
     if(this.state.messages.length > 0 ) {
       return this.state.messages.map((message: {username: string, id: number, room: string, messages: string[]}) => {
-
+        console.log(message)
         if(message.messages.length > 0){
           
           return message.messages.map((msg:string)=> {
             let tr = msg.substring(0,4)
             if (tr === 'http') {
-              return <img src={msg} alt="chosen or random gifs or/of cats" style={styleImg}/>
+              return <div><img src={msg} alt="chosen or random gifs or/of cats" style={styleImg}/></div>
     
               //else return  an ordinary string message
             } 
-              return <li>{message.username + ':' + msg}</li>
+              return <li style={{flex: '0 0 auto', padding: "0.3em"}}><b>{message.username}:</b> {msg}</li>
           })
         }
       })
@@ -147,42 +146,46 @@ export default class Form extends Component<Props, State> {
 
   render() {
     return (
-      <div>
-        <ul>
-            {this.displayMessageHistory()}
-        </ul>
-          {this.displayCurrentSender()}
-          <h1>{'user: '+ this.props.username}</h1>
-          <h1>{'Room: '+ this.props.room}</h1>
-
-        <form onSubmit={this.handleSubmit}>
-        <div style={autoSuggestion}>
-
-          {this.displayAutoSuggestion()}
+      <div style={{margin: "3em", display: "flex", flexDirection: "row" }}>
+        <div style={{backgroundColor: "#515BB3", padding: "1em"}}>
+          <h3>{'Room: '+ this.props.room}</h3>
+          <h3>{'user: '+ this.props.username}</h3> 
         </div>
-        <label htmlFor="text">
-          Message:
-              <input type="text" name="message"  value={this.state.message} onChange={this.handOnChange} onKeyPress={this.keyPress}/>
-        </label>
-          <input type="submit" value="Send"/>
-        </form>
+        <div>
+        <div style={{height: "30em", width: "40em", overflow: "auto", margin:"0 0 1em 1em"}}>
+          <ol style={{display: "flex", flexDirection: "column-reverse"}}>
+              {this.displayMessageHistory()}
+          </ol>
+            {this.displayCurrentSender()}
+        </div>
+        <div>
+          <form style={{marginLeft: "1em"}} onSubmit={this.handleSubmit}>
+            <div className="form-row">
+              <div style={formStyle} className="form-group col-md-4">
+                <label htmlFor="text">
+                  <input type="text" className="form-control" id="inputPassword2" placeholder="Type here..." name="message"  value={this.state.message} onChange={this.handOnChange} onKeyPress={this.keyPress}/>
+                </label>
+              </div>
+              <div style={formStyle} className="form-group col-md-4">
+                <button type="submit" className="btn btn-info mb-2">Send message</button>
+              </div>
+              <div className="form-group col-md-4" style={autoSuggestion}>
+                {this.displayAutoSuggestion()}
+              </div>
+            </div>
+          </form>
+          </div>
+        </div>
       </div>
 
     );
   }
 }
 
-/*const formStyle: CSSProperties = {
-  position: "fixed",
-  width: "100%",
-  bottom: 0,
-  display: "flex",
-  flexDirection: "column",
-  backgroundColor: "#9e9e4e",
-  padding: "2em",
-  alignItems: "center"
+const formStyle: CSSProperties = {
+  marginBottom: 0
 }
-
+/*
 const labelStyle: CSSProperties = {
   width: "70%"
 }
@@ -199,9 +202,11 @@ const inputStyle: CSSProperties = {
 }*/
 
 const autoSuggestion ={
-  width:"70%"
+  width:"70%",
+  marginBottom: 0
 }
 
 const styleImg = {
-  width:"10em"
+  width:"20em",
+  padding: "0.3em"
 }

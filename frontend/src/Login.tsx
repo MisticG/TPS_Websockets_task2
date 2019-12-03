@@ -22,7 +22,7 @@ export default class Login extends Component<Props, State>{
     this.state = {
       username: '',
       room: 'a',
-      login:false,
+      login: false,
       password:''
     }
 
@@ -35,13 +35,11 @@ export default class Login extends Component<Props, State>{
     let senderInfo ={username:this.state.username,message:'', messages:[], room:this.state.room, password:this.state.password};
     console.log(senderInfo, 'here is sender')
     this.socket.emit('single-message', senderInfo);
-    this.setState({login:true},()=>this.props.getCurrentUser(this.state))
+    this.setState({login: true}, () => this.props.getCurrentUser(this.state))
   }
 
   handOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
- 
     this.setState({[event.target.name]:event.target.value } as any)
-
   }
 
   getChoosenRoom = (room:String)=>{
@@ -60,7 +58,7 @@ export default class Login extends Component<Props, State>{
           <form onSubmit={this.handleSubmit} >
             <div className="form-row">
               <div className="form-group col-md-6">
-                <label htmlFor="inputEmail4"><b>Choose nickname:</b></label>
+                <label htmlFor="inputText4"><b>Choose nickname:</b></label>
                 <input type="text" className="form-control" placeholder="Nickname" name="username" onChange={this.handOnChange} required/>
               </div>
               <div className="form-group col-md-6">
@@ -73,7 +71,6 @@ export default class Login extends Component<Props, State>{
             </div>
           </form>
         </div>
-  
       )
     }
   }
