@@ -35,11 +35,12 @@ export default class Form extends Component<Props, State>{
 
   handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    let username = this.state.username
     let msg = this.state.message;
       if (msg.trim() === "") return;
 
       if(msg.startsWith("/")) {
-          handleSlashCommand.call(this.state.thisMsg, msg);
+          handleSlashCommand.call(this.state.thisMsg, msg );
 
           this.setState(
             {message: ""}
@@ -47,7 +48,7 @@ export default class Form extends Component<Props, State>{
           return;
       }
 
-    this.socket.emit('single-message', msg);
+    this.socket.emit('single-message', {msg, username});
     this.setState({message: ''});
   }
 
@@ -83,16 +84,19 @@ export default class Form extends Component<Props, State>{
   displayMessageHistory() {
     //if there are any messages
     if (this.state.messages.length > 0)  {
-      return this.state.messages.map((message: string) => {
+      return this.state.messages.map((message: any) => {
+        console.log(message.msg)
         
         //if the string contains 'http' aka An image
-        let msg = message.substring(0, 4)
+       
+        let msg = message.msg.substring(0, 4)
+        //let msg = "hello;"
         if (msg === 'http') {
           return <img src={message} style={{width: "400px", height: "300px"}}alt="chosen or random gifs or/of cats"/>
 
           //else return  an ordinary string message
         } 
-          return <li>Bored? Do this: <b>{message}</b></li>
+          return <li>{message.username}: {message.msg}</li>
       })
     } 
   }

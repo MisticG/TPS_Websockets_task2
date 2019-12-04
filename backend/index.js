@@ -13,9 +13,10 @@ let messages = []
 //io is the connections objet to all clientsand socket is one single connection  
 io.on('connection',(socket)=>{
 
-    io.emit('message-history',messages)
+    io.emit('message-history', messages)
     
     socket.on('single-message',(msg)=>{
+        console.log(msg)
         messages.push(msg)
         io.emit('single-message',messages)
     })
