@@ -12,7 +12,7 @@ export default class Room extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-          choosenRoom:"a",
+          choosenRoom:"A",
         }
     }
 
