@@ -159,7 +159,7 @@ export default class App extends Component<Props, State> {
        
         if (this.state.currentUserIsTyping !== '') {
 
-            return <span>{this.state.currentUserIsTyping} + ' is typing.... '</span>
+            return <span>{this.state.currentUserIsTyping} is typing.... </span>
         }
     }
 
