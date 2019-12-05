@@ -10,91 +10,66 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const _ = require('underscore');
 
-let rooms = ['a', 'b', 'c']
+
 let usersWithmessages = []  
 
 let joinedRooms = []
 //io is the connections objet to all clientsand. Socket is one single connection  
 io.on('connection',(socket)=> {
 
-    io.emit('rooms', rooms);
  
-    io.emit('message-history',usersWithmessages); 
-    socket.on('join_room',(room)=> {
-        
-        if(joinedRooms.length > 0) {
-
-            for(let r of joinedRooms) {
-                if(r.password === room.password && r.room === room.room)  {
-                  
-                    socket.join(room.room);
-                    let roomId = Object.keys(socket.rooms);
-                    socket.emit('join_room', {text:'success', id:roomId[0]});
-                    return
-                }
-                
-                if(r.password !== room.password && r.room !== room.room) {
-                    joinedRooms.push(room);
-                    socket.join(room).room;
-                    let roomId = Object.keys(socket.rooms);
-                    socket.emit('join_room',{text:'success', id:roomId[0]});
-                    
-               
-                }
-                if(r.password !== room.password && r.room === room.room){
-                    socket.emit('join_room', {text: 'Failed',id:undefined});
-                  
-                }
-            }
-        } else {
-            joinedRooms.push(room)
-            socket.join(room.room);
-            let roomId = Object.keys(socket.rooms);
-        
-            socket.emit('join_room', {text:'success', id:roomId[0]});
-        }
-        console.log(socket.rooms)
-    });
+    
     //Handle sign in and sign up
+    io.emit('message-history',usersWithmessages);
     socket.on('sign-in-sign-up',(userI)=>{
-        let existUser = false;
+     
+        let existUser = 3;
         let isUser = checkUser(userI, existUser);
-  
-        //We check if it is not user even from the list
-         
-        if(!isUser) {
+      
+        if(isUser === 3) {
             usersWithmessages.push(userI);
+            socket.join(userI.room);
+            io.emit('sign-in-sign-up', 'success');
+
+            
+        } else if(isUser === 404){
+            io.emit('sign-in-sign-up', 'Fail');
+        }else if(isUser === 1){
+         
+            socket.join(userI.room);
             io.emit('sign-in-sign-up', 'success')
-            return 
-        } else if(isUser){
-           
-            io.emit('sign-in-sign-up', 'success')
-            return 
+
         } else {
+           
             io.emit('sign-in-sign-up', 'something else went wrong!')
-            return 
+         
         }
       
     });
     //Handle single message for single user with specefic group
     socket.on('single-message',(userInfo) => {
-        console.log(userInfo, 'here')
-
-   
-        if(usersWithmessages.length > 0) {
-
+      
+      
+        
+        if( usersWithmessages.length > 0) {
+           
             for(let user of usersWithmessages){
-
-                if(user.username == userInfo.username  ){
-                   
-                    user.messages.push(userInfo.message)
+    
+                if(user.room == userInfo.room){
+                  
+                    
+                   user.messages.push({text:userInfo.message, username:userInfo.username});
+                  
+                
                 }
             } 
-              
-        };
+        } 
+      
+    
         
         let testing = _.groupBy(usersWithmessages, (obj)=>{return obj.room });
-        
+        console.log(testing);
+        console.log(testing['a'][0].messages)
         io.sockets.in(userInfo.room).emit('single-message', testing[userInfo.room]);
      
       
@@ -120,8 +95,8 @@ io.on('connection',(socket)=> {
             if(existUser){
                 for(let user of usersWithmessages){
                    
-                    if(user.username === query.username ){
-                        user.messages.push(data)
+                    if(user.room === query.room ){
+                        user.messages.push({text:data, username:query.username})
                     }
                 }
             } 
@@ -142,15 +117,22 @@ function checkUser(userSend, existUser){
     if(usersWithmessages.length > 0) {
 
         for (user of usersWithmessages) {
-
-            if (user.username == userSend.username  ) {
-                existUser = true
+            //when a user has access to room
+            if (user.password === userSend.password && user.room === userSend.room ) {
+                existUser = 1
+            }
+            
+            if(user.room === userSend.room && user.password !== userSend.password
+                || user.room !== userSend.room && user.password === userSend.password ){
+                existUser= 404
+             
+                
             }
         }
-     
+       
     } else {
         
-        existUser = false
+        existUser = 3
     }
     return existUser
 }
