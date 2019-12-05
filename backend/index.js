@@ -10,73 +10,104 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const _ = require('underscore');
 
-let rooms = ['a', 'b', 'c']
+
 let usersWithmessages = []  
 
-//io is the connections objet to all clientsand socket is one single connection  
+
+//io is the connections objet to all clientsand. Socket is one single connection  
 io.on('connection',(socket)=> {
 
-    io.emit('rooms', rooms);
+ 
     
-    //Handle joing room and history for specefic group
-    socket.on('join_room',(room)=>{    
-        socket.join(room);
-        let allGroups = _.groupBy(usersWithmessages, (obj) => {return obj.room });
-        io.sockets.in(room).emit('message-history', allGroups[room]);   
-    })
+    //Handle sign in and sign up
+    //io.emit('message-history',usersWithmessages);
+    socket.on('sign-in-sign-up',(userI)=>{
+     
+        let existUser = 3;
+        let isUser = checkUser(userI, existUser);
+      
+        if(isUser === 3) {
+            usersWithmessages.push(userI);
+            socket.join(userI.room);
+            io.emit('sign-in-sign-up', 'success');
 
+            
+        } else if(isUser === 404){
+            io.emit('sign-in-sign-up', 'Fail');
+        }else if(isUser === 1){
+         
+            socket.join(userI.room);
+            io.emit('sign-in-sign-up', 'success')
+
+        } else {
+           
+            io.emit('sign-in-sign-up', 'something else went wrong!')
+         
+        }
+        let testingg = _.groupBy(usersWithmessages, (obj)=>{return obj.room });
+     
+        io.sockets.to(userI.room).emit('message-history', testingg[userI.room]);
+      
+    });
     //Handle single message for single user with specefic group
     socket.on('single-message',(userInfo) => {
-
-        let existUser = false;
-        let isUser = checkUser(userInfo, existUser);
-     
-        if(!isUser) {
-            usersWithmessages.push(userInfo);
-            
-        }
-        if(isUser){
+      
+       
+        
+        if( usersWithmessages.length > 0) {
+           
             for(let user of usersWithmessages){
+    
+                if(user.room == userInfo.room){
+                  
+                    
+                   user.messages.push({text:userInfo.message, username:userInfo.username});
+                  
                 
-                if(user.username === userInfo.username && userInfo.message !== ''){
-                    user.messages.push(userInfo.message)
                 }
-            }
+            } 
         } 
-        let allGroups = _.groupBy(usersWithmessages, (obj)=>{return obj.room });
-        io.sockets.in(userInfo.room).emit('single-message', allGroups[userInfo.room]);
+      
+    
+        
+        let testing = _.groupBy(usersWithmessages, (obj)=>{return obj.room });
+        io.sockets.in(userInfo.room).emit('single-message', testing[userInfo.room]);
+     
+      
     });
-
+    
     //Handle when someone is typing
     socket.on('typing',(usermsg) => {
+
         socket.broadcast.in(usermsg.room).emit('typing', usermsg.username);
     })
 
+
     //Handle api request
     socket.on('SEND_QUERY', function(query) {
-        console.log(query, 'here is query')
+     
         var response = require('./requestHandler')(query.query);
         //response from requestHandler
         response.then((data)=>{
 
-            console.log(response, 'query response here')
+            //Check new user or exsit user
             let existUserTest = false;
             let existUser = checkUser(query, existUserTest);
             if(existUser){
                 for(let user of usersWithmessages){
                    
-                    if(user.username === query.username){
-                        user.messages.push(data)
+                    if(user.room === query.room ){
+                        user.messages.push({text:data, username:query.username})
                     }
                 }
             } 
-          
             let allGroups = _.groupBy(usersWithmessages, (obj)=>{return obj.room });
             io.emit('RECEIVE_QUERY', data)
-            io.sockets.in(query.room).emit('single-message',allGroups[query.room]);
+            io.emit('single-message',allGroups[query.room]);
+          
 
         }).catch((error)=>{
-            io.emit('RECEIVE_QUERY','Det gick inte att hämta!'+error)
+            io.emit('RECEIVE_QUERY','Det gick inte att hämta!'+ error)
         })
         
     })
@@ -87,14 +118,22 @@ function checkUser(userSend, existUser){
     if(usersWithmessages.length > 0) {
 
         for (user of usersWithmessages) {
-
-            if (user.username == userSend.username) {
-                existUser = true
+            //when a user has access to room
+            if (user.password === userSend.password && user.room === userSend.room ) {
+                existUser = 1
+            }
+            
+            if(user.room === userSend.room && user.password !== userSend.password
+                || user.room !== userSend.room && user.password === userSend.password ){
+                existUser= 404
+             
+                
             }
         }
-     
+       
     } else {
-        existUser = false
+        
+        existUser = 3
     }
     return existUser
 }
