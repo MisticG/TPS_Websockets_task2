@@ -4,25 +4,23 @@ import handleSlashCommand from './handleSlashCommand';
 import AutoSeggestion from './AutoSeggestion';
 import Login from './Login'
 import Form from './Form';
+import { string } from 'prop-types';
 
-interface currentUser {
-
-}
 
 interface State {
 
-    message: any,
+    message: String,
     thisMsg: String
     existGiphy: boolean,
-    imgUrl: any
-    messages: any,
+    imgUrl: String,
+    messages: [{username:String, password:String, messages:[{text:String, username:String}], room:String}],
     currentUserIsTyping: String,
     choosenSuggestionValue: String,
-    joinedRoomOrNot:any,
+    joinedRoomOrNot:String,
     username: String,
     room: String,
     password: String,
-    test:any
+
 
 }
 
@@ -44,24 +42,21 @@ export default class App extends Component<Props, State> {
             thisMsg: '',
             existGiphy: false,
             imgUrl: '',
-            messages: [],
+            messages:  [{username:'', password:'', messages:[{text:'', username:''}], room:''}],
             currentUserIsTyping: '',
             choosenSuggestionValue: '',
             joinedRoomOrNot:'',
             username: '',
             room: '',
             password: '',
-            test:''
+       
         }
 
         this.socket = io('http://localhost:5000');
     }
     
-    getCurrentUser =(data:any)=>{
-        /*
-        ,()=>
-        this.socket.emit('join_room', { room: this.state.room, password: this.state.password},()=>console.log(this.state, 'here is user info') 
-         */
+    getCurrentUser =(data:{username:string |String, room: string, password:string})=>{
+ 
         this.setState({username:data.username, room:data.room, password:data.password},
             ()=>{this.socket.emit('sign-in-sign-up', 
             {username:data.username,
@@ -84,12 +79,12 @@ export default class App extends Component<Props, State> {
 
             this.socket.emit('single-message', { username: this.state.username, message: this.state.message, room: this.state.room, password:this.state.password });
         }
-        console.log(this.props);
+       
         this.setState({
             currentUserIsTyping: '',
             message: ''
         }, () => this.socket.emit('typing', { username: '', room: this.state.room}));
-       console.log(this.state.messages)
+      
     }
 
     handOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -121,17 +116,17 @@ export default class App extends Component<Props, State> {
     }
 
     setupSocketEventListeners = () => {
-
-        this.socket.on('message-history', (dat: any) => {
+      
+        this.socket.on('message-history', (dat: [{username:String, password:String, messages:[{text:String, username:String}], room:String}]) => {
         
-            this.setState({ messages: dat}, () => { console.log(this.state.messages, 'message history') })
+            this.setState({ messages: dat })
         });
 
-        this.socket.on('single-message', (message: any) => {
+        this.socket.on('single-message', (message:  [{username:String, password:String, messages:[{text:String, username:String}], room:String}]) => {
          
-            this.setState({ messages:message},()=>{console.log(this.state.messages)})
+            this.setState({ messages:message})
         });
-        this.socket.on('RECEIVE_QUERY', (imgUrl: any) => {
+        this.socket.on('RECEIVE_QUERY', (imgUrl: String) => {
 
             this.setState({ messages: this.state.messages, existGiphy: true, imgUrl: imgUrl })
 
@@ -139,14 +134,14 @@ export default class App extends Component<Props, State> {
 
         this.socket.on('typing', ((username: string) => {
             
-            this.setState({ currentUserIsTyping: username },()=>console.log(this.state.currentUserIsTyping))
+            this.setState({ currentUserIsTyping: username })
         }))
         
        
 
         this.socket.on('sign-in-sign-up', (sucfai: string) => {
             
-            this.setState({ joinedRoomOrNot: sucfai }, () => { console.log(this.state.joinedRoomOrNot) })
+            this.setState({ joinedRoomOrNot: sucfai })
         })
     }
 

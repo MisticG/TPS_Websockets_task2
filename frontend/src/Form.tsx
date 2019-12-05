@@ -35,14 +35,14 @@ export default class Form extends Component<Props, State> {
     }
 
     displayMessageHistory() {
-        console.log(this.props.messages, 'from sign in');
+   
         if (this.props.messages !== null && this.props.messages !== undefined && this.props.messages.length > 0) {
             return this.props.messages.map((message: { username: string, id: number, room: string, messages:any[] }) => {
                 
                 if ( message.messages !== null && message.messages !== undefined && message.messages.length > 0) {
                    
                     return message.messages.map((msg: any) => {
-                        console.log(message.messages)
+                     
                         let tr = msg.text.substring(0, 4)
                         if (tr === 'http') {
                             return <div><img src={msg.text} alt="chosen or random gifs or/of cats" style={styleImg} /></div>

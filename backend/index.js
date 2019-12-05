@@ -13,7 +13,7 @@ const _ = require('underscore');
 
 let usersWithmessages = []  
 
-let joinedRooms = []
+
 //io is the connections objet to all clientsand. Socket is one single connection  
 io.on('connection',(socket)=> {
 
@@ -52,7 +52,7 @@ io.on('connection',(socket)=> {
     //Handle single message for single user with specefic group
     socket.on('single-message',(userInfo) => {
       
-      
+       
         
         if( usersWithmessages.length > 0) {
            
@@ -71,8 +71,6 @@ io.on('connection',(socket)=> {
     
         
         let testing = _.groupBy(usersWithmessages, (obj)=>{return obj.room });
-        console.log(testing);
-        console.log(testing['a'][0].messages)
         io.sockets.in(userInfo.room).emit('single-message', testing[userInfo.room]);
      
       

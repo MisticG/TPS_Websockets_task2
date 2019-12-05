@@ -6,14 +6,19 @@ import Form from './Form';
 interface State {
     username: String,
     password: string,
-    room: any,
+    room: string,
     login: Boolean,
-    isUserOrNot:any
-    
+    isUserOrNot: String
+
+}
+interface userData {
+    username: string | String,
+    room: string,
+    password: string
 }
 interface Props {
-    room:String
-    getCurrentUser:(data:any)=>void
+    room: String
+    getCurrentUser: (data: userData) => void
 }
 export default class Login extends Component<Props, State>{
     private socket: SocketIOClient.Socket
@@ -24,22 +29,22 @@ export default class Login extends Component<Props, State>{
             room: '',
             login: false,
             password: '',
-            isUserOrNot:''
-        
+            isUserOrNot: ''
+
         }
 
-        
+
         this.socket = io('http://localhost:5000');
     }
 
     handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        let senderInfo = { username: this.state.username, message: '', messages: [], room: this.state.room, password: this.state.password };
 
-       // this.socket.emit('join_room', { room: this.state.room, password: this.state.password });
-      
-
-        this.setState({ login: true },()=> this.props.getCurrentUser(this.state));
+        this.setState({ login: true }, () => this.props.getCurrentUser({
+            username: this.state.username,
+            password: this.state.password,
+            room: this.state.room
+        }));
 
     }
 
@@ -47,35 +52,24 @@ export default class Login extends Component<Props, State>{
         this.setState({ [event.target.name]: event.target.value } as any)
     }
 
-    getChoosenRoom = (room: String) => {
-        this.setState({ room: room }, () => { console.log(this.state.room) })
+    getChoosenRoom = (room: string) => {
+        this.setState({ room: room })
 
     }
 
 
-    componentWillUnmount() {
-        this.socket.close();
-    }
-
-
-    componentDidMount() {
-       
-
-    
-    }  
-   
 
     render() {
-      
-       return (
+
+        return (
             <div style={{ margin: "5em" }}>
-               
+
                 <form onSubmit={this.handleSubmit} >
                     <div className="form-row">
                         <div className="form-group col-md-6">
                             <label htmlFor="inputText4"><b>Choose room:</b></label>
-                            <input type="text" className="form-control" value={this.state.room}placeholder="room" name="room" onChange={this.handOnChange} required />
-                        </div><br/>
+                            <input type="text" className="form-control" value={this.state.room} placeholder="room" name="room" onChange={this.handOnChange} required />
+                        </div><br />
                         <div className="form-group col-md-6">
                             <label htmlFor="inputPassword4"><b>Choose password:</b></label>
                             <input type="password" className="form-control" id="inputPassword4" placeholder="Your password" name="password" onChange={this.handOnChange} required />
@@ -84,7 +78,7 @@ export default class Login extends Component<Props, State>{
                             <label htmlFor="inputText4"><b>Choose nickname:</b></label>
                             <input type="text" className="form-control" placeholder="Nickname" name="username" onChange={this.handOnChange} required />
                         </div>
-                        
+
                     </div>
                     <div style={{ textAlign: "right" }}>
                         <button type="submit" className="btn btn-info">Join chat!</button>
