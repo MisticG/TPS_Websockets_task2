@@ -43,7 +43,6 @@ export default class Form extends Component<Props, State> {
             <div className="container" style={{display: "flex", justifyContent: "center", marginTop: "5em"}}>
                 <div className="rounded" style={{ backgroundColor: "#515BB3", padding: "1em" }}>
                     <h3>{'Room: ' + this.props.room}</h3>
-                    {/*<h3>{'user: ' + this.props.username}</h3>*/}
                 </div>
                 <div>
                     <div style={{ height: "30em", width: "40em", overflow: "auto", transform: "rotate(180deg)", direction: "rtl", margin: "0 0 1em 1em" }}>
