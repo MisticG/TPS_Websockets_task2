@@ -1,7 +1,5 @@
-import React, { Component, CSSProperties } from 'react';
+import React, { Component } from 'react';
 import io from 'socket.io-client';
-import Form from './Form';
-
 
 interface State {
     username: String,
@@ -45,7 +43,6 @@ export default class Login extends Component<Props, State>{
             password: this.state.password,
             room: this.state.room
         }));
-
     }
 
     handOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,20 +51,16 @@ export default class Login extends Component<Props, State>{
 
     getChoosenRoom = (room: string) => {
         this.setState({ room: room })
-
     }
 
-
-
     render() {
-
         return (
             <div style={{ margin: "5em" }}>
 
                 <form onSubmit={this.handleSubmit} >
                     <div className="form-row">
                         <div className="form-group col-md-6">
-                            <label htmlFor="inputText4"><b>Choose room:</b></label>
+                            <label htmlFor="inputText4"><b>Choose room name:</b></label>
                             <input type="text" className="form-control" value={this.state.room} placeholder="room" name="room" onChange={this.handOnChange} required />
                         </div><br />
                         <div className="form-group col-md-6">
@@ -78,7 +71,6 @@ export default class Login extends Component<Props, State>{
                             <label htmlFor="inputText4"><b>Choose nickname:</b></label>
                             <input type="text" className="form-control" placeholder="Nickname" name="username" onChange={this.handOnChange} required />
                         </div>
-
                     </div>
                     <div style={{ textAlign: "right" }}>
                         <button type="submit" className="btn btn-info">Join chat!</button>
@@ -88,4 +80,3 @@ export default class Login extends Component<Props, State>{
         )
     }
 }
-

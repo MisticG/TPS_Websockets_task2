@@ -1,11 +1,9 @@
-import React, { Component, CSSProperties } from 'react';
+import React, { Component } from 'react';
 import io from 'socket.io-client';
 import handleSlashCommand from './handleSlashCommand';
 import AutoSeggestion from './AutoSeggestion';
 import Login from './Login'
 import Form from './Form';
-import { string } from 'prop-types';
-
 
 interface State {
 
@@ -19,23 +17,13 @@ interface State {
     joinedRoomOrNot:String,
     username: String,
     room: String,
-    password: String,
-
-
+    password: String
 }
 
-interface Props {
-
- 
-
-    
-}
-
-
-export default class App extends Component<Props, State> {
+export default class App extends Component<{}, State> {
     private socket: SocketIOClient.Socket
 
-    constructor(props: Props) {
+    constructor(props: {}) {
         super(props);
         this.state = {
             message: '',
@@ -49,7 +37,6 @@ export default class App extends Component<Props, State> {
             username: '',
             room: '',
             password: '',
-       
         }
 
         this.socket = io('http://localhost:5000');
@@ -58,13 +45,13 @@ export default class App extends Component<Props, State> {
     getCurrentUser =(data:{username:string |String, room: string, password:string})=>{
  
         this.setState({username:data.username, room:data.room, password:data.password},
-            ()=>{this.socket.emit('sign-in-sign-up', 
-            {username:data.username,
-             room:data.room,
-             password:data.password,
-            messages:[]})})
-        
-        
+            () => {this.socket.emit('sign-in-sign-up', {
+                username:data.username,
+                room:data.room,
+                password:data.password,
+                messages:[]}
+            )}
+        )
     }
 
     handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -84,7 +71,6 @@ export default class App extends Component<Props, State> {
             currentUserIsTyping: '',
             message: ''
         }, () => this.socket.emit('typing', { username: '', room: this.state.room}));
-      
     }
 
     handOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,10 +85,10 @@ export default class App extends Component<Props, State> {
             message: data.value
         })
     }
+
     displayAutoSuggestion = () => {
         let message = this.state.message.substring(0, 1);
         if (message === '/') {
-
             return <AutoSeggestion getvalue={this.getValueFromAutoSuggestion} />
         }
     }
@@ -118,29 +104,22 @@ export default class App extends Component<Props, State> {
     setupSocketEventListeners = () => {
       
         this.socket.on('message-history', (dat: [{username:String, password:String, messages:[{text:String, username:String}], room:String}]) => {
-        
             this.setState({ messages: dat })
         });
 
         this.socket.on('single-message', (message:  [{username:String, password:String, messages:[{text:String, username:String}], room:String}]) => {
-         
             this.setState({ messages:message})
         });
+
         this.socket.on('RECEIVE_QUERY', (imgUrl: String) => {
-
             this.setState({ messages: this.state.messages, existGiphy: true, imgUrl: imgUrl })
+        });
 
-        })
-
-        this.socket.on('typing', ((username: string) => {
-            
+        this.socket.on('typing', (username: string) => {
             this.setState({ currentUserIsTyping: username })
-        }))
+        })
         
-       
-
         this.socket.on('sign-in-sign-up', (sucfai: string) => {
-            
             this.setState({ joinedRoomOrNot: sucfai })
         })
     }
@@ -151,9 +130,7 @@ export default class App extends Component<Props, State> {
     
 
     displayCurrentSender = ()=> {
-       
         if (this.state.currentUserIsTyping !== '') {
-
             return <span>{this.state.currentUserIsTyping} is typing.... </span>
         }
     }
@@ -161,7 +138,8 @@ export default class App extends Component<Props, State> {
     
     displayLoginOrForm (){
         if(this.state.joinedRoomOrNot === 'success'){
-            return <Form onchange={this.handOnChange} 
+            return <Form 
+                        onchange={this.handOnChange} 
                         onsubmit={this.handleSubmit} 
                         displayautosug={this.displayAutoSuggestion}
                         messages={this.state.messages}
@@ -170,26 +148,24 @@ export default class App extends Component<Props, State> {
                         username={this.state.username}
                         room={this.state.room}
                         message={this.state.message}
-                        />
+                    />
         } else {
                 
-            return (<div>
-        <h1>Sign in info: {this.state.joinedRoomOrNot}</h1>
-                <Login getCurrentUser={this.getCurrentUser} room={this.state.room}/>
-            </div>)
+            return (
+                <div className="container-fluid">
+                    <div className="border shadow rounded border-light container" style={{display: "flex", justifyContent: "center", marginTop: "5em"}}>
+                        <div style={{textAlign: "center", margin: "3em"}}>
+                            <h1>Welcome to our chat</h1>
+                            <h3>Login status: {this.state.joinedRoomOrNot} </h3>
+                            
+                            <Login getCurrentUser={this.getCurrentUser} room={this.state.room}/>
+                        </div>
+                    </div>  
+                </div>
+            )
         }
     }
-    
-
     render() {
         return (this.displayLoginOrForm())
-    
-}
-}
-
-
-
-const styleImg = {
-    width: "20em",
-    padding: "0.3em"
+    }
 }

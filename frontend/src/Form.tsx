@@ -1,18 +1,10 @@
 import React, { Component, CSSProperties } from 'react';
-import io from 'socket.io-client';
-import handleSlashCommand from './handleSlashCommand';
-import AutoSeggestion from './AutoSeggestion';
-import Login from './Login'
 
-
-interface State {
-
-
-}
+interface State {}
 
 interface Props {
-    onchange:(event: React.ChangeEvent<HTMLInputElement>)=>void,
-    onsubmit:(event: React.FormEvent<HTMLFormElement>) =>void,
+    onchange:(event: React.ChangeEvent<HTMLInputElement>) => void,
+    onsubmit:(event: React.FormEvent<HTMLFormElement>) => void,
     displayautosug:any,
     messages:any,
     keyPress:any,
@@ -23,31 +15,21 @@ interface Props {
 }
 
 export default class Form extends Component<Props, State> {
-  
 
     constructor(props: Props) {
         super(props);
-        this.state = {
-           
-        }
-
-       
+        this.state = {}
     }
 
     displayMessageHistory() {
-   
         if (this.props.messages !== null && this.props.messages !== undefined && this.props.messages.length > 0) {
-            return this.props.messages.map((message: { username: string, id: number, room: string, messages:any[] }) => {
-                
+            return this.props.messages.map((message: { username: string, id: number, room: string, messages:any[] }) => { 
                 if ( message.messages !== null && message.messages !== undefined && message.messages.length > 0) {
-                   
                     return message.messages.map((msg: any) => {
                      
                         let tr = msg.text.substring(0, 4)
                         if (tr === 'http') {
                             return <div><img src={msg.text} alt="chosen or random gifs or/of cats" style={styleImg} /></div>
-
-                         
                         }
                         return <li style={{ flex: '0 0 auto', padding: "0.3em" }}><b>{msg.username}:</b> {msg.text}</li>
                     })
@@ -55,23 +37,24 @@ export default class Form extends Component<Props, State> {
             })
         }
     }
- 
 
     render() {
-     return (
-        <div style={{ margin: "3em", display: "flex", flexDirection: "row" }}>
-            <div style={{ backgroundColor: "#515BB3", padding: "1em" }}>
-                <h3>{'Room: ' + this.props.room}</h3>
-                <h3>{'user: ' + this.props.username}</h3>
-            </div>
-            <div>
-                <div style={{ height: "30em", width: "40em", overflow: "auto", margin: "0 0 1em 1em" }}>
-                    <ul style={{ display: "flex", flexDirection: "column" }}>
-                        {this.displayMessageHistory()}
-                    </ul>
-                    {this.props.displayCurrentSender()}
+        return (
+            <div className="container" style={{display: "flex", justifyContent: "center", marginTop: "5em"}}>
+                <div className="rounded" style={{ backgroundColor: "#515BB3", padding: "1em" }}>
+                    <h3>{'Room: ' + this.props.room}</h3>
+                    {/*<h3>{'user: ' + this.props.username}</h3>*/}
                 </div>
                 <div>
+                    <div style={{ height: "30em", width: "40em", overflow: "auto", transform: "rotate(180deg)", direction: "rtl", margin: "0 0 1em 1em" }}>
+                        <div style={{transform: "rotate(180deg)", direction: "ltr"}}>
+                            <ul>
+                                {this.displayMessageHistory()}
+                            </ul>
+                            {this.props.displayCurrentSender()}
+                        </div>
+                    </div>
+                    <div>
                     <form style={{ marginLeft: "1em" }} onSubmit={this.props.onsubmit}>
                         <div className="form-row">
                             <div style={formStyle} className="form-group col-md-4">
@@ -88,19 +71,16 @@ export default class Form extends Component<Props, State> {
                         </div>
                     </form>
                 </div>
+                </div>
+                
             </div>
-        </div>
-
-    );
-    
+        );
+    }
 }
-}
-
 
 const formStyle: CSSProperties = {
     marginBottom: 0
 }
-
 
 const autoSuggestion = {
     width: "70%",

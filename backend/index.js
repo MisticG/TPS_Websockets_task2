@@ -67,10 +67,8 @@ io.on('connection',(socket)=> {
                 }
             } 
         } 
-      
-    
-        
-        let testing = _.groupBy(usersWithmessages, (obj)=>{return obj.room });
+
+        let testing = _.groupBy(usersWithmessages, (obj) => {return obj.room });
         io.sockets.in(userInfo.room).emit('single-message', testing[userInfo.room]);
      
       
