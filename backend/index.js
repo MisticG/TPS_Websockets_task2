@@ -20,7 +20,7 @@ io.on('connection',(socket)=> {
  
     
     //Handle sign in and sign up
-    io.emit('message-history',usersWithmessages);
+    //io.emit('message-history',usersWithmessages);
     socket.on('sign-in-sign-up',(userI)=>{
      
         let existUser = 3;
@@ -44,6 +44,9 @@ io.on('connection',(socket)=> {
             io.emit('sign-in-sign-up', 'something else went wrong!')
          
         }
+        let testingg = _.groupBy(usersWithmessages, (obj)=>{return obj.room });
+     
+        io.sockets.to(userI.room).emit('message-history', testingg[userI.room]);
       
     });
     //Handle single message for single user with specefic group
