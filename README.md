@@ -6,6 +6,13 @@ We created a chat using Typescript/React and node js as our backend. We used soc
 - Added three "/"-commands (with at least two third party API's) in the text input.
 - It's possible to see when someone is typing in real time.
 
+We used these API's in the project:
+
+https://thecatapi.com/
+
+https://developers.giphy.com/
+
+https://www.boredapi.com/
 
 # How to start the project
 - ### You should have latest node --version
