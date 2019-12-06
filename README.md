@@ -6,6 +6,7 @@ We created a chat using Typescript/React and node js as our backend. We used soc
 - Added three "/"-commands (with at least two third party API's) in the text input.
 - It's possible to see when someone is typing in real time.
 
+
 # How to start the project
 - ### You should have latest node --version
 - You can create several rooms BUT passwords and nicknames must be unique. You can join the chosen room with a unique nickname, type the room you want to join, and use the password that was used at the creation of the room. 
@@ -29,3 +30,4 @@ We created a chat using Typescript/React and node js as our backend. We used soc
 1. **$ cd frontend** and run **$ npm install**
 
 2. **$ npm start** in the frontend directory
+
