@@ -29,10 +29,10 @@ io.on('connection',(socket)=> {
         if(isUser === 3) {
             usersWithmessages.push(userI);
             socket.join(userI.room);
-            io.emit('sign-in-sign-up', 'success');
+            socket.emit('sign-in-sign-up', 'success');
             
          
-            
+             
         } else if(isUser === 404){
             socket.emit('sign-in-sign-up', 'Fail');
         } else if(isUser === 1){
@@ -40,11 +40,11 @@ io.on('connection',(socket)=> {
             socket.join(userI.room);
          
 
-            io.emit('sign-in-sign-up', 'success');
+            socket.emit('sign-in-sign-up', 'success');
 
         } else {
            
-            io.emit('sign-in-sign-up', 'something else went wrong!')
+            socket.emit('sign-in-sign-up', 'something else went wrong!')
          
         }
         let testingg = _.groupBy(usersWithmessages, (obj)=>{return obj.room });
