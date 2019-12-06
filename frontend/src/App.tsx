@@ -17,7 +17,8 @@ interface State {
     joinedRoomOrNot:String,
     username: String,
     room: String,
-    password: String
+    password: String,
+    existRoom: any,
 }
 
 export default class App extends Component<{}, State> {
@@ -37,6 +38,8 @@ export default class App extends Component<{}, State> {
             username: '',
             room: '',
             password: '',
+            existRoom: '',
+        
         }
 
         this.socket = io('http://localhost:5000');
@@ -102,6 +105,9 @@ export default class App extends Component<{}, State> {
     }
 
     setupSocketEventListeners = () => {
+        this.socket.on('exist-room', (existRoom: any) => {
+            this.setState({existRoom: existRoom})
+        })
       
         this.socket.on('message-history', (dat: [{username:String, password:String, messages:[{text:String, username:String}], room:String}]) => {
             this.setState({ messages: dat })
@@ -121,7 +127,9 @@ export default class App extends Component<{}, State> {
         
         this.socket.on('sign-in-sign-up', (sucfai: string) => {
             this.setState({ joinedRoomOrNot: sucfai })
-        })
+       
+    })
+
     }
 
     keyPress = () => {
@@ -132,6 +140,17 @@ export default class App extends Component<{}, State> {
     displayCurrentSender = ()=> {
         if (this.state.currentUserIsTyping !== '') {
             return <span>{this.state.currentUserIsTyping} is typing.... </span>
+        }
+    }
+
+    displayCreatedRooms = () => {
+        
+        if(this.state.existRoom.length > 0) {
+            return this.state.existRoom.map((room: any) => {
+                return <h1>Current Rooms: {room.room}</h1>
+            })
+
+            
         }
     }
 
@@ -157,7 +176,7 @@ export default class App extends Component<{}, State> {
                         <div style={{textAlign: "center", margin: "3em"}}>
                             <h1>Welcome to our chat</h1>
                             <h3>Login status: {this.state.joinedRoomOrNot} </h3>
-                            
+                            {this.displayCreatedRooms()}
                             <Login getCurrentUser={this.getCurrentUser} room={this.state.room}/>
                         </div>
                     </div>  

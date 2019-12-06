@@ -2,8 +2,10 @@ import io from 'socket.io-client';
 const socket: any = io('http://localhost:5000')
 
 export default function handleSlashCommand(this: String, message: {username:String, room:String, msg:String, password:String}) {
+
     const cmd = message.msg.split(" ")[0]
     let query = message.msg.slice(cmd.length)
+    
     if(cmd === "/giphy") {
         console.log(message, 'here is message')
         query = 'giphy' + query

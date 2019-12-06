@@ -7,17 +7,19 @@ interface State {
     room: string,
     login: Boolean,
     isUserOrNot: String
-
 }
+
 interface userData {
     username: string | String,
     room: string,
     password: string
 }
+
 interface Props {
     room: String
     getCurrentUser: (data: userData) => void
 }
+
 export default class Login extends Component<Props, State>{
     private socket: SocketIOClient.Socket
     constructor(props: Props) {
@@ -28,9 +30,7 @@ export default class Login extends Component<Props, State>{
             login: false,
             password: '',
             isUserOrNot: ''
-
         }
-
 
         this.socket = io('http://localhost:5000');
     }
@@ -43,6 +43,7 @@ export default class Login extends Component<Props, State>{
             password: this.state.password,
             room: this.state.room
         }));
+        
     }
 
     handOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -13,14 +13,14 @@ const _ = require('underscore');
 
 let usersWithmessages = []  
 
-
 //io is the connections objet to all clientsand. Socket is one single connection  
 io.on('connection',(socket)=> {
 
- 
-    
     //Handle sign in and sign up
-    //io.emit('message-history',usersWithmessages);
+    if(usersWithmessages.length > 0) {
+        io.emit('exist-room', usersWithmessages);
+    }
+    
     socket.on('sign-in-sign-up',(userI)=>{
      
         let existUser = 3;
@@ -30,14 +30,17 @@ io.on('connection',(socket)=> {
             usersWithmessages.push(userI);
             socket.join(userI.room);
             io.emit('sign-in-sign-up', 'success');
-
+            
+         
             
         } else if(isUser === 404){
             io.emit('sign-in-sign-up', 'Fail');
-        }else if(isUser === 1){
-         
+        } else if(isUser === 1){
+            
             socket.join(userI.room);
-            io.emit('sign-in-sign-up', 'success')
+         
+
+            io.emit('sign-in-sign-up', 'success');
 
         } else {
            
@@ -49,21 +52,14 @@ io.on('connection',(socket)=> {
         io.sockets.to(userI.room).emit('message-history', testingg[userI.room]);
       
     });
+
+
     //Handle single message for single user with specefic group
     socket.on('single-message',(userInfo) => {
-      
-       
-        
         if( usersWithmessages.length > 0) {
-           
             for(let user of usersWithmessages){
-    
                 if(user.room == userInfo.room){
-                  
-                    
-                   user.messages.push({text:userInfo.message, username:userInfo.username});
-                  
-                
+                    user.messages.push({text:userInfo.message, username:userInfo.username});
                 }
             } 
         } 
@@ -71,7 +67,7 @@ io.on('connection',(socket)=> {
         let testing = _.groupBy(usersWithmessages, (obj) => {return obj.room });
         io.sockets.in(userInfo.room).emit('single-message', testing[userInfo.room]);
      
-      
+       
     });
     
     //Handle when someone is typing
