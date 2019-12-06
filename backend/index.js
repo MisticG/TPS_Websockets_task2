@@ -34,7 +34,7 @@ io.on('connection',(socket)=> {
          
             
         } else if(isUser === 404){
-            io.emit('sign-in-sign-up', 'Fail');
+            socket.emit('sign-in-sign-up', 'Fail');
         } else if(isUser === 1){
             
             socket.join(userI.room);
