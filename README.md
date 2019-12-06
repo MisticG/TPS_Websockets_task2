@@ -8,6 +8,8 @@ We created a chat using Typescript/React and node js as our backend. We used soc
 
 # How to start the project
 - ### You should have latest node --version
+- You can create several rooms BUT passwords and nicknames must be unique. You can join the chosen room with a unique nickname, type the room you want to join, and use the password that was used at the creation of the room. 
+
 ### To run backend and frontend together, please write the following in the terminal
 
 1. **$ npm install** in root
