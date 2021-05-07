@@ -29,6 +29,6 @@
     "nodemon": "^2.0.1",
     "react-select": "^3.0.8",
     "socket.io": "^2.3.0",
-    "underscore": "^1.9.1"
+    "underscore": "^1.12.1"
   }
 }
